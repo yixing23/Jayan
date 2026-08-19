@@ -1,0 +1,38 @@
+{
+  "entities": {
+    "schedules": {
+      "title": "Schedules",
+      "description": "Cloud saved schedule datasets accessible via sync code or user session",
+      "type": "object",
+      "properties": {
+        "syncCode": {
+          "type": "string",
+          "description": "Unique short 6-digit sync code for cross-device access"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the schedule dataset"
+        },
+        "dataset": {
+          "type": "object",
+          "description": "Complete JSON dataset of teachers, rooms, courses, schedules, etc."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner anonymous user ID"
+        }
+      },
+      "required": ["syncCode", "dataset", "updatedAt"]
+    }
+  }
+}

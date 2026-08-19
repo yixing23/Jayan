@@ -1,0 +1,6 @@
+{
+  "name": "新知学堂排课系统",
+  "description": "新知学堂智能教务排课与课表管理系统，支持教师管理、教室场地划分、课程计划编排与智能排课。 ",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

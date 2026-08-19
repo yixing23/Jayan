@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read and write for schedules collection
+    match /schedules/{scheduleId} {
+      allow read, write: if true;
+    }
+  }
+}
