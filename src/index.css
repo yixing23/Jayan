@@ -2,9 +2,17 @@
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Playfair Display', 'Noto Serif SC', Georgia, serif;
+    font-style: italic;
+    font-weight: bold;
     background-color: #FDFCFB;
     color: #1A1A1A;
+  }
+
+  *:not(.material-symbols-outlined) {
+    font-family: 'Playfair Display', 'Noto Serif SC', Georgia, serif !important;
+    font-style: italic !important;
+    font-weight: bold !important;
   }
 
   h1, h2, h3, .font-serif, .font-editorial {

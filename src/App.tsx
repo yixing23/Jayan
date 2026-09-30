@@ -3,7 +3,7 @@ import { EMPTY_CUSTOM_PRESET } from './data/samplePresets';
 import { ScheduleConflict, ScheduleDataset, SchedulerMetrics, SlotAssignment } from './types';
 import { runAutoScheduler, validateSchedule } from './utils/schedulerEngine';
 import { processClassHourDeductions } from './utils/classHourUtils';
-import { Header, NavTab } from './components/Header';
+import { Header, MainTab } from './components/Header';
 import { saveScheduleToCloud } from './lib/firebase';
 import { TeacherManagement } from './components/TeacherManagement';
 import { RoomManagement } from './components/RoomManagement';
@@ -18,28 +18,19 @@ import { SlotEditModal } from './components/SlotEditModal';
 import { CloudSyncModal } from './components/CloudSyncModal';
 
 export default function App() {
-  // Current Dataset state - defaults to custom empty preset for educational institutions
   const [dataset, setDataset] = useState<ScheduleDataset>(() => {
     const saved = localStorage.getItem('chronos_custom_dataset');
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // fallback
-      }
+      try { return JSON.parse(saved); } catch (e) {}
     }
     return EMPTY_CUSTOM_PRESET;
   });
 
-  // Save dataset to localStorage whenever changed
   useEffect(() => {
     localStorage.setItem('chronos_custom_dataset', JSON.stringify(dataset));
   }, [dataset]);
 
-  // Active Assignments
   const [assignments, setAssignments] = useState<SlotAssignment[]>(dataset.assignments || []);
-
-  // History Stack for Undo / Redo (Max 30 steps)
   const [historyStack, setHistoryStack] = useState<SlotAssignment[][]>(() => [dataset.assignments || []]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
   const historyRef = React.useRef({ stack: historyStack, index: historyIndex });
@@ -51,17 +42,15 @@ export default function App() {
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < historyStack.length - 1;
 
-  // Re-validate schedule conflicts & metrics without modifying history stack directly
   const applyAssignmentsState = (
     newAssignments: SlotAssignment[],
     datasetOverride?: ScheduleDataset,
     actionNotice?: string
   ) => {
     const targetDataset = datasetOverride || dataset;
-    // Process Class-Hour deductions for student names
     const { updatedDataset, noticeMessages } = processClassHourDeductions(targetDataset, newAssignments, assignments);
-
     const currentConflicts = validateSchedule(updatedDataset, newAssignments);
+    
     setAssignments(newAssignments);
     setConflicts(currentConflicts);
 
@@ -71,7 +60,6 @@ export default function App() {
     const hardConflictsCount = currentConflicts.filter((c) => c.severity === 'hard').length;
     const softConflictsCount = currentConflicts.filter((c) => c.severity === 'soft').length;
 
-    // Recalculate room utilization
     const roomsCount = updatedDataset.rooms?.length || 0;
     const daysCount = updatedDataset.timeConfig?.days?.length || 5;
     const periodsCount = updatedDataset.timeConfig?.periods?.filter(p => !p.isBreak).length || 8;
@@ -98,7 +86,6 @@ export default function App() {
     }
   };
 
-  // Push new assignments state onto history stack (Max 30 steps)
   const pushHistoryAndValidate = (
     newAssignments: SlotAssignment[],
     datasetOverride?: ScheduleDataset,
@@ -110,51 +97,37 @@ export default function App() {
     const currentTop = updatedStack[updatedStack.length - 1];
     if (!currentTop || JSON.stringify(currentTop) !== JSON.stringify(newAssignments)) {
       updatedStack.push(newAssignments);
-      if (updatedStack.length > 30) {
-        updatedStack.shift();
-      }
+      if (updatedStack.length > 30) updatedStack.shift();
       setHistoryStack(updatedStack);
       setHistoryIndex(updatedStack.length - 1);
     }
-
     applyAssignmentsState(newAssignments, datasetOverride, actionNotice);
   };
 
-  // Undo Handler
   const handleUndo = () => {
     const { stack, index } = historyRef.current;
     if (index > 0) {
       const prevIndex = index - 1;
-      const prevAssignments = stack[prevIndex];
       setHistoryIndex(prevIndex);
-      applyAssignmentsState(prevAssignments, undefined, '↩ 已撤销上一步排课操作');
+      applyAssignmentsState(stack[prevIndex], undefined, '已撤销');
     }
   };
 
-  // Redo Handler
   const handleRedo = () => {
     const { stack, index } = historyRef.current;
     if (index < stack.length - 1) {
       const nextIndex = index + 1;
-      const nextAssignments = stack[nextIndex];
       setHistoryIndex(nextIndex);
-      applyAssignmentsState(nextAssignments, undefined, '↪ 已恢复重做排课操作');
+      applyAssignmentsState(stack[nextIndex], undefined, '已重做');
     }
   };
 
-  // Global Keyboard Shortcuts (Ctrl+Z / Cmd+Z, Ctrl+Y / Cmd+Shift+Z)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Pause undo/redo when user is typing in input/textarea/select/contentEditable
       const activeElem = document.activeElement;
       if (activeElem) {
         const tagName = activeElem.tagName.toLowerCase();
-        if (
-          tagName === 'input' ||
-          tagName === 'textarea' ||
-          tagName === 'select' ||
-          (activeElem as HTMLElement).isContentEditable
-        ) {
+        if (tagName === 'input' || tagName === 'textarea' || tagName === 'select' || (activeElem as HTMLElement).isContentEditable) {
           return;
         }
       }
@@ -163,35 +136,24 @@ export default function App() {
       const modifierKey = isMac ? e.metaKey : e.ctrlKey;
 
       if (!modifierKey) return;
-
       const key = e.key.toLowerCase();
 
       if (key === 'z') {
-        if (e.shiftKey) {
-          e.preventDefault();
-          handleRedo();
-        } else {
-          e.preventDefault();
-          handleUndo();
-        }
+        if (e.shiftKey) { e.preventDefault(); handleRedo(); }
+        else { e.preventDefault(); handleUndo(); }
       } else if (key === 'y' && !isMac) {
-        e.preventDefault();
-        handleRedo();
+        e.preventDefault(); handleRedo();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Conflicts & Metrics
   const [conflicts, setConflicts] = useState<ScheduleConflict[]>([]);
   const [metrics, setMetrics] = useState<SchedulerMetrics>(() => {
     const totalRequiredPeriods = dataset.courses.reduce((sum, c) => sum + (c.weeklyHours || 0), 0);
     const scheduledPeriods = (dataset.assignments || []).length;
     const completionRate = totalRequiredPeriods > 0 ? Math.min(100, Math.round((scheduledPeriods / totalRequiredPeriods) * 100)) : (scheduledPeriods > 0 ? 100 : 0);
-    
-    // Calculate initial room utilization
     const roomsCount = dataset.rooms?.length || 0;
     const daysCount = dataset.timeConfig?.days?.length || 5;
     const periodsCount = dataset.timeConfig?.periods?.filter(p => !p.isBreak).length || 8;
@@ -211,21 +173,15 @@ export default function App() {
     };
   });
 
-  // Scheduling State
   const [isScheduling, setIsScheduling] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<MainTab>('data-prep');
+  const [dataPrepTab, setDataPrepTab] = useState<'teachers' | 'rooms' | 'groups' | 'courses' | 'class-hours'>('teachers');
+  const [activeTool, setActiveTool] = useState<'diagnostics' | 'ai-advisor' | null>(null);
 
-  // Navigation Tab according to user's 6-step workflow
-  const [currentTab, setCurrentTab] = useState<NavTab>('teachers');
-
-  // Cloud Sync state
   const [syncCode, setSyncCode] = useState<string | null>(() => localStorage.getItem('xinzhi_cloud_sync_code'));
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(() => localStorage.getItem('xinzhi_last_synced_at'));
   const [isCloudModalOpen, setIsCloudModalOpen] = useState<boolean>(false);
-
-  // Auto Sync State
-  const [autoSyncEnabled, setAutoSyncEnabled] = useState<boolean>(() => {
-    return localStorage.getItem('xinzhi_auto_sync_enabled') === 'true';
-  });
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState<boolean>(() => localStorage.getItem('xinzhi_auto_sync_enabled') === 'true');
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'unsaved' | 'idle' | 'error'>('synced');
 
   const handleSyncCodeUpdate = (code: string) => {
@@ -242,17 +198,12 @@ export default function App() {
     const next = !autoSyncEnabled;
     setAutoSyncEnabled(next);
     localStorage.setItem('xinzhi_auto_sync_enabled', String(next));
-    if (next) {
-      showNotice('已开启实时静默云端同步，每次修改将自动保存至 Firestore');
-    } else {
-      showNotice('已关闭实时自动云端同步');
-    }
+    if (next) showNotice('已开启实时云端同步');
+    else showNotice('已关闭实时云端同步');
   };
 
-  // Debounced Auto Sync Effect
   useEffect(() => {
     if (!autoSyncEnabled) return;
-
     setSyncStatus('unsaved');
     const timer = setTimeout(async () => {
       setSyncStatus('syncing');
@@ -263,26 +214,21 @@ export default function App() {
           handleSyncCodeUpdate(currentCode);
         }
         await saveScheduleToCloud(dataset, currentCode);
-        const now = new Date().toLocaleTimeString();
-        handleLastSyncedUpdate(now);
+        handleLastSyncedUpdate(new Date().toLocaleTimeString());
         setSyncStatus('synced');
       } catch (err) {
-        console.error('Auto sync failed:', err);
         setSyncStatus('error');
       }
-    }, 1000); // 1-second debounce
-
+    }, 1000);
     return () => clearTimeout(timer);
   }, [dataset, assignments, autoSyncEnabled]);
 
-  // Notification Message state
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
   const showNotice = (msg: string) => {
     setNoticeMessage(msg);
     setTimeout(() => setNoticeMessage(null), 4000);
   };
 
-  // Slot Modal state
   const [activeSlotModal, setActiveSlotModal] = useState<{
     dayIndex: number;
     periodIndex: number;
@@ -290,7 +236,6 @@ export default function App() {
     initialSpecificDate?: string;
   } | null>(null);
 
-  // Initial Auto-Schedule on mount if courses exist
   useEffect(() => {
     if (dataset.courses.length > 0) {
       handleRunAutoSchedule(dataset);
@@ -299,33 +244,28 @@ export default function App() {
     }
   }, []);
 
-  // Run Auto-Scheduler Engine
   const handleRunAutoSchedule = (currentData: ScheduleDataset = dataset) => {
     setIsScheduling(true);
     setTimeout(() => {
       const result = runAutoScheduler(currentData);
-      
       setMetrics(prev => ({
         ...prev,
         bottlenecks: result.metrics.bottlenecks,
         executionTimeMs: result.metrics.executionTimeMs,
         teacherBalanceScore: result.metrics.teacherBalanceScore,
       }));
-
-      pushHistoryAndValidate(result.assignments, currentData, '✨ 一键全自动智能排课完成');
+      pushHistoryAndValidate(result.assignments, currentData, '排课完成');
       setIsScheduling(false);
     }, 150);
   };
 
-  // Delete Assignment
   const handleDeleteAssignment = (assignmentId: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const updated = assignments.filter((a) => a.id !== assignmentId);
-    pushHistoryAndValidate(updated, undefined, '已成功移除该课时');
+    pushHistoryAndValidate(updated, undefined, '已移除');
     if (activeSlotModal) setActiveSlotModal(null);
   };
 
-  // Save Manual Assignment from Modal
   const handleSaveSlot = (assignment: SlotAssignment) => {
     const existingIdx = assignments.findIndex((a) => a.id === assignment.id);
     let updated: SlotAssignment[];
@@ -335,11 +275,10 @@ export default function App() {
     } else {
       updated = [...assignments, assignment];
     }
-    pushHistoryAndValidate(updated, undefined, existingIdx >= 0 ? '已保存修改课时' : '已新增排课');
+    pushHistoryAndValidate(updated, undefined, '已保存');
     setActiveSlotModal(null);
   };
 
-  // Auto-Fix Conflict Action
   const handleAutoFixConflict = (conflict: ScheduleConflict) => {
     if (conflict.affectedAssignmentIds.length === 0) return;
     const targetId = conflict.affectedAssignmentIds[0];
@@ -369,30 +308,27 @@ export default function App() {
 
         if (!isTeacherBusy && !isRoomBusy && !isGroupBusy) {
           const updated = assignments.map((a) => (a.id === targetId ? { ...a, dayIndex: d, periodIndex: p } : a));
-          pushHistoryAndValidate(updated, undefined, '已调换排课时段');
+          pushHistoryAndValidate(updated, undefined, '已调换');
           return;
         }
       }
     }
-
-    showNotice('无法找到完全无碰撞的空闲格子，建议直接点击【一键智能排课】由算法全局重新规划。');
+    showNotice('无法自动修复，建议重新排课');
   };
 
-  // Move assignment directly to slot (from candidate slot recommendation)
   const handleMoveAssignmentToSlot = (assignmentId: string, dayIndex: number, periodIndex: number) => {
     const updated = assignments.map((a) => (a.id === assignmentId ? { ...a, dayIndex, periodIndex } : a));
-    pushHistoryAndValidate(updated, undefined, '已成功调整课时时段');
+    pushHistoryAndValidate(updated, undefined, '已调整');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFCFB] text-[#1A1A1A]">
-      {/* Editorial Header */}
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900">
       <Header
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
+        onOpenAiAdvisor={() => setActiveTool('ai-advisor')}
+        onOpenDiagnostics={() => setActiveTool('diagnostics')}
         dataset={dataset}
-        onRunAutoSchedule={() => handleRunAutoSchedule(dataset)}
-        isScheduling={isScheduling}
         metrics={metrics}
         conflictCount={conflicts.filter((c) => c.severity === 'hard').length}
         canUndo={canUndo}
@@ -406,43 +342,34 @@ export default function App() {
         syncStatus={syncStatus}
       />
 
-      {/* Main Body View according to 6-Step logic */}
-      <main className="flex-1 flex flex-col w-full">
-        {currentTab === 'teachers' && (
-          <TeacherManagement
-            dataset={dataset}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
-          />
-        )}
-
-        {currentTab === 'rooms' && (
-          <RoomManagement
-            dataset={dataset}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
-          />
-        )}
-
-        {currentTab === 'groups' && (
-          <GroupManagement
-            dataset={dataset}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
-            onNavigateToCourses={() => setCurrentTab('courses')}
-          />
-        )}
-
-        {currentTab === 'courses' && (
-          <CourseManagement
-            dataset={dataset}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
-          />
+      <main className="flex-1 flex flex-col w-full relative">
+        {currentTab === 'data-prep' && (
+          <div className="flex flex-col flex-1 h-full w-full">
+            <div className="flex items-center gap-8 px-8 py-0 border-b border-neutral-100 bg-neutral-50/50 text-sm">
+              <button onClick={() => setDataPrepTab('teachers')} className={`py-2.5 border-b-2 font-medium ${dataPrepTab === 'teachers' ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>教师</button>
+              <button onClick={() => setDataPrepTab('rooms')} className={`py-2.5 border-b-2 font-medium ${dataPrepTab === 'rooms' ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>教室</button>
+              <button onClick={() => setDataPrepTab('groups')} className={`py-2.5 border-b-2 font-medium ${dataPrepTab === 'groups' ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>班级</button>
+              <button onClick={() => setDataPrepTab('courses')} className={`py-2.5 border-b-2 font-medium ${dataPrepTab === 'courses' ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>课程</button>
+              <button onClick={() => setDataPrepTab('class-hours')} className={`py-2.5 border-b-2 font-medium ${dataPrepTab === 'class-hours' ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>课时管理</button>
+            </div>
+            <div className="flex-1 overflow-auto bg-neutral-50">
+              {dataPrepTab === 'teachers' && (
+                <TeacherManagement dataset={dataset} onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)} />
+              )}
+              {dataPrepTab === 'rooms' && (
+                <RoomManagement dataset={dataset} onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)} />
+              )}
+              {dataPrepTab === 'groups' && (
+                <GroupManagement dataset={dataset} onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)} onNavigateToCourses={() => setDataPrepTab('courses')} />
+              )}
+              {dataPrepTab === 'courses' && (
+                <CourseManagement dataset={dataset} onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)} />
+              )}
+              {dataPrepTab === 'class-hours' && (
+                <ClassHourManagement dataset={dataset} onUpdateDataset={(updated) => setDataset(updated)} />
+              )}
+            </div>
+          </div>
         )}
 
         {currentTab === 'scheduling' && (
@@ -452,9 +379,7 @@ export default function App() {
             onUpdateAssignments={(newAssignments) => pushHistoryAndValidate(newAssignments, undefined, '已更新课时分布')}
             onRunAutoSchedule={() => handleRunAutoSchedule(dataset)}
             isScheduling={isScheduling}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
+            onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)}
             canUndo={canUndo}
             canRedo={canRedo}
             onUndo={handleUndo}
@@ -467,20 +392,9 @@ export default function App() {
             dataset={dataset}
             assignments={assignments}
             onUpdateAssignments={(newAssignments) => pushHistoryAndValidate(newAssignments, undefined, '已更新课时分布')}
-            onUpdateDataset={(updated) => {
-              pushHistoryAndValidate(updated.assignments || assignments, updated);
-            }}
-            onSelectAssignment={(a) =>
-              setActiveSlotModal({
-                dayIndex: a.dayIndex,
-                periodIndex: a.periodIndex,
-                existingAssignment: a,
-                initialSpecificDate: a.specificDate,
-              })
-            }
-            onSlotClick={(dayIndex, periodIndex, existingAssignment, specificDate) =>
-              setActiveSlotModal({ dayIndex, periodIndex, existingAssignment, initialSpecificDate: specificDate })
-            }
+            onUpdateDataset={(updated) => pushHistoryAndValidate(updated.assignments || assignments, updated)}
+            onSelectAssignment={(a) => setActiveSlotModal({ dayIndex: a.dayIndex, periodIndex: a.periodIndex, existingAssignment: a, initialSpecificDate: a.specificDate })}
+            onSlotClick={(dayIndex, periodIndex, existingAssignment, specificDate) => setActiveSlotModal({ dayIndex, periodIndex, existingAssignment, initialSpecificDate: specificDate })}
             onClearAssignment={handleDeleteAssignment}
             canUndo={canUndo}
             canRedo={canRedo}
@@ -488,35 +402,60 @@ export default function App() {
             onRedo={handleRedo}
           />
         )}
-
-        {currentTab === 'conflicts' && (
-          <ConflictDiagnostics
-            conflicts={conflicts}
-            metrics={metrics}
-            dataset={dataset}
-            assignments={assignments}
-            onAutoFixConflict={handleAutoFixConflict}
-            onRunAutoSchedule={() => handleRunAutoSchedule(dataset)}
-            onMoveAssignmentToSlot={handleMoveAssignmentToSlot}
-            onNavigateToTab={(tab) => setCurrentTab(tab as NavTab)}
-          />
-        )}
-
-        {currentTab === 'class-hours' && (
-          <ClassHourManagement
-            dataset={dataset}
-            onUpdateDataset={(updated) => {
-              setDataset(updated);
-            }}
-          />
-        )}
-
-        {currentTab === 'ai-advisor' && (
-          <AiAdvisor dataset={dataset} conflicts={conflicts} metrics={metrics} />
-        )}
       </main>
 
-      {/* Manual Slot Edit Modal */}
+      {/* Diagnostics Modal Overlay */}
+      {activeTool === 'diagnostics' && (
+        <div className="fixed inset-0 z-50 bg-neutral-50 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="flex items-center justify-between px-8 py-4 border-b border-neutral-200 bg-white">
+            <h2 className="text-xl font-bold text-neutral-900 flex items-center gap-2">
+              <span className="material-symbols-outlined text-neutral-500">health_and_safety</span>
+              冲突诊断
+            </h2>
+            <button onClick={() => setActiveTool(null)} className="p-2 rounded-full hover:bg-neutral-100 text-neutral-500 transition-colors">
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto">
+            <ConflictDiagnostics
+              conflicts={conflicts}
+              metrics={metrics}
+              dataset={dataset}
+              assignments={assignments}
+              onAutoFixConflict={handleAutoFixConflict}
+              onRunAutoSchedule={() => {
+                handleRunAutoSchedule(dataset);
+                setActiveTool(null);
+              }}
+              onMoveAssignmentToSlot={handleMoveAssignmentToSlot}
+              onNavigateToTab={(tab) => {
+                // Not perfectly mapped, but close enough to navigate away
+                setActiveTool(null);
+                setCurrentTab('data-prep');
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Advisor Modal Overlay */}
+      {activeTool === 'ai-advisor' && (
+        <div className="fixed inset-0 z-50 bg-[#FDFBF7] flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="flex items-center justify-between px-8 py-4 border-b border-amber-200/50 bg-white">
+            <h2 className="text-xl font-bold text-amber-900 flex items-center gap-2">
+              <span className="material-symbols-outlined text-amber-600">auto_awesome</span>
+              AI 顾问
+            </h2>
+            <button onClick={() => setActiveTool(null)} className="p-2 rounded-full hover:bg-amber-50 text-amber-700 transition-colors">
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto">
+            <AiAdvisor dataset={dataset} conflicts={conflicts} metrics={metrics} />
+          </div>
+        </div>
+      )}
+
       {activeSlotModal && (
         <SlotEditModal
           dayIndex={activeSlotModal.dayIndex}
@@ -529,18 +468,15 @@ export default function App() {
           onClose={() => setActiveSlotModal(null)}
         />
       )}
-      {/* Cloud Sync Modal */}
+
       <CloudSyncModal
         isOpen={isCloudModalOpen}
         onClose={() => setIsCloudModalOpen(false)}
         dataset={dataset}
         onDatasetLoaded={(newDataset) => {
           setDataset(newDataset);
-          if (newDataset.assignments) {
-            pushHistoryAndValidate(newDataset.assignments, newDataset, '已恢复云端保存的课表记录');
-          } else {
-            handleRunAutoSchedule(newDataset);
-          }
+          if (newDataset.assignments) pushHistoryAndValidate(newDataset.assignments, newDataset, '已恢复云端课表');
+          else handleRunAutoSchedule(newDataset);
         }}
         syncCode={syncCode}
         onSyncCodeUpdate={handleSyncCodeUpdate}
@@ -551,10 +487,9 @@ export default function App() {
         syncStatus={syncStatus}
       />
 
-      {/* Notice Banner */}
       {noticeMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#1A1A1A] text-white px-4 py-3 border border-white/20 shadow-2xl text-xs font-bold flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
-          <span className="material-symbols-outlined text-amber-400 text-sm">info</span>
+        <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white px-4 py-2.5 rounded shadow-lg text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <span className="material-symbols-outlined text-emerald-400 text-sm">check_circle</span>
           <span>{noticeMessage}</span>
         </div>
       )}

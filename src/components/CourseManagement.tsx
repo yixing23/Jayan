@@ -178,56 +178,50 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
   };
 
   return (
-    <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
-      {/* Step Header */}
-      <div className="mb-6 border-b border-[#1A1A1A] pb-4 flex items-center justify-between">
+    <div className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-[#1A1A1A] pb-4">
         <div>
-          <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500">
-            Step 4 • Curriculum & Subject Planning
+          <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500 block mb-0.5">
+            Step 4 • Course Planning
           </span>
-          <h2 className="text-3xl font-serif italic font-bold text-[#1A1A1A] flex items-center gap-2">
-            <span className="material-symbols-outlined text-2xl text-[#1A1A1A]">menu_book</span>
+          <h2 className="text-3xl font-serif italic font-bold text-[#1A1A1A]">
             课程计划管理
           </h2>
-          <p className="text-xs text-neutral-600 mt-1">
-            设置各年级班级的开设课程，绑定负责教师，设定每周计划课时节数与场地需求。
-          </p>
         </div>
-        <div className="flex gap-2">
+        <div className="text-xs font-bold font-mono text-neutral-500 self-end">
+            共 {dataset.courses.length} 门课程
+        </div>
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setShowAddGroupModal(true)}
-            className="px-3 py-1 bg-white border border-[#1A1A1A] text-xs font-bold hover:bg-[#1A1A1A] hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+            className="px-4 py-2 bg-white border border-neutral-300 rounded text-sm font-medium hover:bg-neutral-50 transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm">group_add</span>
             管理班级 ({dataset.groups.length})
           </button>
-          <span className="px-3 py-1 bg-[#1A1A1A] text-white text-xs font-mono font-bold">
-            已有课程: {dataset.courses.length} 门
-          </span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Form: Add Course */}
-        <div className="lg:col-span-1 border border-[#1A1A1A] p-6 bg-[#FDFCFB] flex flex-col justify-between">
+        <div className="lg:col-span-1 bg-white border border-neutral-200 rounded-lg p-6 shadow-sm flex flex-col justify-between">
           <div>
-            <h3 className="text-xl font-serif italic font-bold text-[#1A1A1A] border-b border-[#1A1A1A] pb-3 mb-6 flex items-center gap-2">
-              <span className="material-symbols-outlined text-lg">post_add</span>
+            <h3 className="text-lg font-bold text-neutral-900 mb-6">
               添加课程计划
             </h3>
 
             <form onSubmit={handleAddCourse} className="space-y-4">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-1">
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                     年级 (选填)
                   </label>
                   <select
                     value={courseForm.grade}
                     onChange={(e) => setCourseForm({ ...courseForm, grade: e.target.value })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2 py-2 text-xs font-medium focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-2 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                   >
-                    <option value="">-- 不指定 / 自动识别 --</option>
+                    <option value="">不指定</option>
                     <option value="高一">高一</option>
                     <option value="高二">高二</option>
                     <option value="高三">高三</option>
@@ -241,87 +235,81 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
-                    课程名称 (选填 / 可不指定)
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
+                    课程名称 (选填)
                   </label>
                   <input
                     type="text"
-                    placeholder="留空则自动使用班级/学员名称"
+                    placeholder="留空自动生成"
                     value={courseForm.name}
                     onChange={(e) => setCourseForm({ ...courseForm, name: e.target.value })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-serif italic font-bold focus:outline-none focus:bg-white"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   课程代码 (选填)
                 </label>
                 <input
                   type="text"
-                  placeholder="如: MATH-101 (留空自动生成)"
+                  placeholder="如: MATH-101"
                   value={courseForm.code}
                   onChange={(e) => setCourseForm({ ...courseForm, code: e.target.value })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                 />
               </div>
 
               {/* 授课模式选择 */}
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1 flex justify-between items-center">
-                  <span>授课模式 *</span>
-                  <span className="text-[10px] text-amber-900 font-bold">
-                    {courseForm.teachingMode === 'group' && '班级团课 (需要组班)'}
-                    {courseForm.teachingMode === 'one_on_one' && '1对1辅导 (只需选学员)'}
-                    {courseForm.teachingMode === 'one_on_two' && '1对2辅导 (只需选学员)'}
-                    {courseForm.teachingMode === 'one_on_n' && '1对N小班 (只需选学员)'}
-                  </span>
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
+                  授课模式
                 </label>
-                <div className="grid grid-cols-4 gap-1 p-1 bg-[#F4F2F0] border border-[#1A1A1A]">
+                <div className="grid grid-cols-4 gap-1 p-1 bg-neutral-100 rounded border border-neutral-200">
                   <button
                     type="button"
                     onClick={() => setCourseForm({ ...courseForm, teachingMode: 'group' })}
-                    className={`py-1.5 px-1 text-[11px] font-bold transition-all flex flex-col items-center cursor-pointer ${
+                    className={`py-1.5 px-1 text-xs font-medium rounded transition-all cursor-pointer ${
                       courseForm.teachingMode === 'group'
-                        ? 'bg-[#1A1A1A] text-white shadow-xs'
-                        : 'bg-white text-neutral-700 hover:bg-neutral-200'
+                        ? 'bg-white shadow-sm text-neutral-900'
+                        : 'text-neutral-500 hover:text-neutral-700'
                     }`}
                   >
-                    <span>班级团课</span>
+                    班级团课
                   </button>
                   <button
                     type="button"
                     onClick={() => setCourseForm({ ...courseForm, teachingMode: 'one_on_one' })}
-                    className={`py-1.5 px-1 text-[11px] font-bold transition-all flex flex-col items-center cursor-pointer ${
+                    className={`py-1.5 px-1 text-xs font-medium rounded transition-all cursor-pointer ${
                       courseForm.teachingMode === 'one_on_one'
-                        ? 'bg-amber-900 text-white shadow-xs'
-                        : 'bg-white text-amber-950 hover:bg-amber-50'
+                        ? 'bg-white shadow-sm text-neutral-900'
+                        : 'text-neutral-500 hover:text-neutral-700'
                     }`}
                   >
-                    <span>1对1辅导</span>
+                    1对1
                   </button>
                   <button
                     type="button"
                     onClick={() => setCourseForm({ ...courseForm, teachingMode: 'one_on_two' })}
-                    className={`py-1.5 px-1 text-[11px] font-bold transition-all flex flex-col items-center cursor-pointer ${
+                    className={`py-1.5 px-1 text-xs font-medium rounded transition-all cursor-pointer ${
                       courseForm.teachingMode === 'one_on_two'
-                        ? 'bg-purple-900 text-white shadow-xs'
-                        : 'bg-white text-purple-950 hover:bg-purple-50'
+                        ? 'bg-white shadow-sm text-neutral-900'
+                        : 'text-neutral-500 hover:text-neutral-700'
                     }`}
                   >
-                    <span>1对2辅导</span>
+                    1对2
                   </button>
                   <button
                     type="button"
                     onClick={() => setCourseForm({ ...courseForm, teachingMode: 'one_on_n' })}
-                    className={`py-1.5 px-1 text-[11px] font-bold transition-all flex flex-col items-center cursor-pointer ${
+                    className={`py-1.5 px-1 text-xs font-medium rounded transition-all cursor-pointer ${
                       courseForm.teachingMode === 'one_on_n'
-                        ? 'bg-emerald-900 text-white shadow-xs'
-                        : 'bg-white text-emerald-950 hover:bg-emerald-50'
+                        ? 'bg-white shadow-sm text-neutral-900'
+                        : 'text-neutral-500 hover:text-neutral-700'
                     }`}
                   >
-                    <span>1对N小班</span>
+                    1对N
                   </button>
                 </div>
               </div>
@@ -329,22 +317,22 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
               {/* 只有选择班级团课时，才需要选择/新建上课班级 */}
               {courseForm.teachingMode === 'group' ? (
                 <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="block text-xs font-bold text-neutral-600">
                       上课班级 *
                     </label>
                     <button
                       type="button"
                       onClick={() => setShowAddGroupModal(true)}
-                      className="text-[10px] text-blue-700 underline font-bold cursor-pointer"
+                      className="text-xs text-blue-600 hover:underline font-medium cursor-pointer"
                     >
-                      + 新建班级
+                      新建班级
                     </button>
                   </div>
                   <select
                     value={courseForm.groupId}
                     onChange={(e) => setCourseForm({ ...courseForm, groupId: e.target.value })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2.5 py-2 text-xs font-medium focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-2.5 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                   >
                     {dataset.groups.length === 0 && <option value="">(尚未录入班级，请先点击新建)</option>}
                     {dataset.groups.map((g) => (
@@ -356,13 +344,10 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                 </div>
               ) : (
                 /* 1对1 / 1对2 / 1对N 模式直接设置学员姓名 */
-                <div className="p-2.5 bg-amber-50 border border-amber-300">
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-amber-950 mb-1 flex items-center justify-between">
-                    <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm text-amber-800">person</span>
-                      绑定的学员姓名 *
-                    </span>
-                    <span className="text-[10px] text-amber-800 font-mono">无需选班级，输入学员即可消课</span>
+                <div className="p-3 bg-blue-50/50 border border-blue-100 rounded">
+                  <label className="block text-xs font-bold text-neutral-700 mb-1.5 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">person</span>
+                    绑定的学员姓名 *
                   </label>
                   <input
                     type="text"
@@ -376,22 +361,19 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                     }
                     value={courseForm.studentNames}
                     onChange={(e) => setCourseForm({ ...courseForm, studentNames: e.target.value })}
-                    className="w-full bg-white border border-[#1A1A1A] px-3 py-2 text-xs font-bold text-[#1A1A1A] focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
-                  <p className="text-[10px] text-amber-800 mt-1">
-                    ⚡ 提示：排课后，系统后台将按输入的学员姓名自动划扣课时。
-                  </p>
                 </div>
               )}
 
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   指定授课教师
                 </label>
                 <select
                   value={courseForm.teacherId}
                   onChange={(e) => setCourseForm({ ...courseForm, teacherId: e.target.value })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2.5 py-2 text-xs font-medium focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-2.5 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                 >
                   <option value="">待指定 / 自动匹配</option>
                   {dataset.teachers.map((t) => (
@@ -404,7 +386,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                     每周计划课时 (节)
                   </label>
                   <input
@@ -413,12 +395,12 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                     max={20}
                     value={courseForm.weeklyHours}
                     onChange={(e) => setCourseForm({ ...courseForm, weeklyHours: Number(e.target.value) })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                     单日最大连课 (节)
                   </label>
                   <input
@@ -427,19 +409,19 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                     max={4}
                     value={courseForm.maxConsecutiveHours}
                     onChange={(e) => setCourseForm({ ...courseForm, maxConsecutiveHours: Number(e.target.value) })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   场地设施要求
                 </label>
                 <select
                   value={courseForm.requiredRoomType}
                   onChange={(e) => setCourseForm({ ...courseForm, requiredRoomType: e.target.value as RoomType })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2.5 py-2 text-xs font-medium focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-2.5 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                 >
                   {roomTypes.map((rt) => (
                     <option key={rt.value} value={rt.value}>
@@ -451,9 +433,8 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
 
               <button
                 type="submit"
-                className="w-full py-3 bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors cursor-pointer mt-4 flex items-center justify-center gap-2"
+                className="w-full mt-6 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded shadow-sm transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined text-base">check</span>
                 保存课程计划
               </button>
             </form>
@@ -461,87 +442,82 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
         </div>
 
         {/* Right List: Courses Directory */}
-        <div className="lg:col-span-2 border border-[#1A1A1A] bg-[#FDFCFB] flex flex-col justify-between">
-          <div>
-            <div className="p-4 bg-[#F4F2F0] border-b border-[#1A1A1A] flex justify-between items-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A] flex items-center gap-2">
-                <span className="material-symbols-outlined text-base">auto_stories</span>
-                开设课程与授课绑定清单
-              </span>
+        <div className="lg:col-span-2 bg-white border border-neutral-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
+          {dataset.courses.length === 0 ? (
+            <div className="flex-1 p-12 flex flex-col items-center justify-center text-center">
+              <div className="w-12 h-12 bg-neutral-50 rounded-full flex items-center justify-center mb-3">
+                <span className="material-symbols-outlined text-neutral-400">auto_stories</span>
+              </div>
+              <p className="font-medium text-neutral-900">暂无课程计划</p>
+              <p className="text-sm text-neutral-500 mt-1">请在左侧填写并添加课程</p>
             </div>
-
-            {dataset.courses.length === 0 ? (
-              <div className="p-12 text-center text-neutral-400 text-xs font-mono">
-                暂无课程计划。请在左侧填写并添加课程。
-              </div>
-            ) : (
-              <div className="divide-y divide-[#1A1A1A] max-h-[560px] overflow-y-auto">
-                {dataset.courses.map((course) => {
-                  const group = dataset.groups.find((g) => g.id === course.groupId);
-                  const teacher = dataset.teachers.find((t) => t.id === course.teacherId);
-                  return (
-                    <div key={course.id} className="p-4 hover:bg-[#F4F2F0]/60 transition-colors flex justify-between items-center gap-4">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="px-1.5 py-0.5 bg-[#1A1A1A] text-white text-[10px] font-mono font-bold">
-                            {course.code}
+          ) : (
+            <div className="divide-y divide-neutral-100 max-h-[750px] overflow-y-auto">
+              {dataset.courses.map((course) => {
+                const group = dataset.groups.find((g) => g.id === course.groupId);
+                const teacher = dataset.teachers.find((t) => t.id === course.teacherId);
+                return (
+                  <div key={course.id} className="p-5 hover:bg-neutral-50 transition-colors flex justify-between items-start gap-4 group">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <span className="px-2 py-0.5 bg-neutral-100 rounded text-xs font-medium text-neutral-600">
+                          {course.code}
+                        </span>
+                        <h4 className="font-bold text-base text-neutral-900">{course.name}</h4>
+                        {course.studentNames && (
+                          <span className="px-2 py-0.5 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-medium rounded flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px]">person</span>
+                            学员: {course.studentNames}
                           </span>
-                          <h4 className="font-serif italic font-bold text-lg text-[#1A1A1A]">{course.name}</h4>
-                          {course.studentNames && (
-                            <span className="px-2 py-0.5 bg-amber-100 border border-amber-400 text-amber-900 text-[10px] font-bold flex items-center gap-0.5">
-                              <span className="material-symbols-outlined text-xs">person</span>
-                              学员: {course.studentNames}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-neutral-600 flex flex-wrap gap-x-4 gap-y-1 font-mono">
-                          <span>班级: <strong>{group?.name || '所有班级'}</strong></span>
-                          <span>教师: <strong>{teacher?.name || '待分配'}</strong></span>
-                          <span>场地: <strong>{course.requiredRoomType}</strong></span>
-                          <span>计划周课时: <strong>{course.weeklyHours} 节/周</strong></span>
-                        </div>
+                        )}
                       </div>
-
-                      {confirmDeleteId === course.id ? (
-                        <div className="flex items-center gap-1 bg-red-50 p-1 border border-red-600">
-                          <span className="text-[10px] font-bold text-red-700 px-1">确定删除?</span>
-                          <button
-                            onClick={() => handleDeleteCourse(course.id)}
-                            className="px-2 py-1 bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 cursor-pointer"
-                          >
-                            删除
-                          </button>
-                          <button
-                            onClick={() => setConfirmDeleteId(null)}
-                            className="px-1.5 py-1 text-neutral-600 text-[10px] hover:bg-neutral-200 cursor-pointer"
-                          >
-                            取消
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => setEditingCourse({ ...course })}
-                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-200 rounded cursor-pointer transition-colors"
-                            title="编辑课程信息"
-                          >
-                            <span className="material-symbols-outlined text-lg">edit</span>
-                          </button>
-                          <button
-                            onClick={() => setConfirmDeleteId(course.id)}
-                            className="p-1.5 text-neutral-400 hover:text-red-700 cursor-pointer transition-colors"
-                            title="删除课程"
-                          >
-                            <span className="material-symbols-outlined text-lg">delete</span>
-                          </button>
-                        </div>
-                      )}
+                      <div className="text-sm text-neutral-500 flex flex-wrap gap-x-6 gap-y-1">
+                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-neutral-400">groups</span>{group?.name || '所有班级'}</span>
+                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-neutral-400">person</span>{teacher?.name || '待分配'}</span>
+                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-neutral-400">meeting_room</span>{roomTypes.find(r => r.value === course.requiredRoomType)?.label.split(' ')[0]}</span>
+                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-neutral-400">schedule</span>{course.weeklyHours} 节/周</span>
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+
+                    {confirmDeleteId === course.id ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-red-600 font-medium">确认删除?</span>
+                        <button
+                          onClick={() => handleDeleteCourse(course.id)}
+                          className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-bold hover:bg-red-100 cursor-pointer"
+                        >
+                          删除
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="px-2 py-1 text-neutral-500 text-xs hover:bg-neutral-100 rounded cursor-pointer"
+                        >
+                          取消
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => setEditingCourse({ ...course })}
+                          className="p-1.5 text-neutral-400 hover:text-blue-600 hover:bg-blue-50 rounded cursor-pointer transition-colors"
+                          title="编辑"
+                        >
+                          <span className="material-symbols-outlined text-[20px]">edit</span>
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(course.id)}
+                          className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded cursor-pointer transition-colors"
+                          title="删除"
+                        >
+                          <span className="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
@@ -551,93 +527,93 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowAddGroupModal(false);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 bg-neutral-900/50 z-50 flex items-center justify-center p-4 overflow-y-auto"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-lg w-full p-6 shadow-2xl my-auto max-h-[90vh] overflow-y-auto flex flex-col">
-            <div className="flex justify-between items-center border-b border-[#1A1A1A] pb-2 mb-4">
-              <h3 className="text-xl font-serif italic font-bold">
-                班级管理
+          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center border-b border-neutral-100 p-4">
+              <h3 className="text-lg font-bold text-neutral-900">
+                管理班级
               </h3>
-              <button onClick={() => setShowAddGroupModal(false)} className="text-neutral-500 hover:text-black">
+              <button onClick={() => setShowAddGroupModal(false)} className="text-neutral-400 hover:text-neutral-600 cursor-pointer">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
             {/* Existing Groups List */}
-            <div className="mb-4">
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+            <div className="p-6">
+              <label className="block text-xs font-bold text-neutral-600 mb-2">
                 已有班级 ({dataset.groups.length})
               </label>
-              <div className="max-h-36 overflow-y-auto border border-[#1A1A1A] bg-[#F4F2F0] divide-y divide-neutral-300">
+              <div className="max-h-40 overflow-y-auto border border-neutral-200 rounded-lg bg-neutral-50 divide-y divide-neutral-100 mb-6">
                 {dataset.groups.length === 0 ? (
-                  <div className="p-3 text-[11px] text-neutral-500 italic text-center">暂无班级</div>
+                  <div className="p-4 text-sm text-neutral-500 text-center">暂无班级</div>
                 ) : (
                   dataset.groups.map((g) => (
-                    <div key={g.id} className="p-2 flex justify-between items-center text-xs">
-                      <div>
-                        <span className="font-bold text-[#1A1A1A]">{g.name}</span>
-                        <span className="text-[10px] text-neutral-500 ml-2">({g.size}人)</span>
+                    <div key={g.id} className="p-3 flex justify-between items-center bg-white hover:bg-neutral-50 transition-colors">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm text-neutral-900">{g.name}</span>
+                        <span className="text-xs text-neutral-500">({g.size}人)</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleDeleteGroup(g.id)}
-                        className="px-2 py-0.5 text-red-600 hover:bg-red-100 rounded text-[10px] font-bold cursor-pointer"
+                        className="text-xs font-medium text-red-600 hover:underline cursor-pointer"
                       >
-                        删除班级
+                        删除
                       </button>
                     </div>
                   ))
                 )}
               </div>
+
+              {/* New Group Form */}
+              <form onSubmit={handleAddGroup} className="space-y-4 border-t border-neutral-100 pt-6">
+                <h4 className="text-sm font-bold text-neutral-900">添加新班级</h4>
+                <div>
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
+                    班级名称
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="如: 高一(1)班"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
+                    班级人数
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={500}
+                    value={newGroupSize}
+                    onChange={(e) => setNewGroupSize(Number(e.target.value))}
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddGroupModal(false)}
+                    className="px-4 py-2 rounded text-sm font-medium text-neutral-600 hover:bg-neutral-100 cursor-pointer"
+                  >
+                    关闭
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800 cursor-pointer"
+                  >
+                    保存班级
+                  </button>
+                </div>
+              </form>
             </div>
-
-            {/* New Group Form */}
-            <form onSubmit={handleAddGroup} className="space-y-4 border-t border-neutral-300 pt-4">
-              <h4 className="text-xs font-bold uppercase text-[#1A1A1A]">添加新班级</h4>
-              <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
-                  班级名称 *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="如: 高一(1)班 / 计算机2401班"
-                  value={newGroupName}
-                  onChange={(e) => setNewGroupName(e.target.value)}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-bold focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
-                  班级学生人数
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={500}
-                  value={newGroupSize}
-                  onChange={(e) => setNewGroupSize(Number(e.target.value))}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAddGroupModal(false)}
-                  className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-200 cursor-pointer"
-                >
-                  关闭
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-[#1A1A1A] text-white text-xs font-bold uppercase hover:bg-neutral-800 cursor-pointer"
-                >
-                  确认保存班级
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}
@@ -647,21 +623,21 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
           onClick={(e) => {
             if (e.target === e.currentTarget) setEditingCourse(null);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 bg-neutral-900/50 z-50 flex items-center justify-center p-4 overflow-y-auto"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-lg w-full p-6 shadow-2xl my-auto max-h-[90vh] overflow-y-auto flex flex-col">
-            <div className="flex justify-between items-center border-b border-[#1A1A1A] pb-2 mb-4">
-              <h3 className="text-xl font-serif italic font-bold">
-                编辑课程计划
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center border-b border-neutral-100 p-4">
+              <h3 className="text-lg font-bold text-neutral-900">
+                编辑课程
               </h3>
-              <button onClick={() => setEditingCourse(null)} className="text-neutral-500 hover:text-black">
+              <button onClick={() => setEditingCourse(null)} className="text-neutral-400 hover:text-neutral-600 cursor-pointer">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <form onSubmit={handleSaveEditedCourse} className="space-y-4">
+            <form onSubmit={handleSaveEditedCourse} className="p-6 space-y-4">
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   课程名称
                 </label>
                 <input
@@ -669,26 +645,26 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                   required
                   value={editingCourse.name}
                   onChange={(e) => setEditingCourse({ ...editingCourse, name: e.target.value })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-serif italic font-bold focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                     课程代码
                   </label>
                   <input
                     type="text"
                     value={editingCourse.code}
                     onChange={(e) => setEditingCourse({ ...editingCourse, code: e.target.value })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
-                    计划周课时 (节)
+                  <label className="block text-xs font-bold text-neutral-600 mb-1.5">
+                    周课时 (节)
                   </label>
                   <input
                     type="number"
@@ -696,21 +672,21 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                     max={20}
                     value={editingCourse.weeklyHours}
                     onChange={(e) => setEditingCourse({ ...editingCourse, weeklyHours: Number(e.target.value) })}
-                    className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-3 py-2 text-xs font-mono focus:outline-none"
+                    className="w-full border border-neutral-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-neutral-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   授课教师
                 </label>
                 <select
                   value={editingCourse.teacherId || ''}
                   onChange={(e) => setEditingCourse({ ...editingCourse, teacherId: e.target.value })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2.5 py-2 text-xs font-medium focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-2.5 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                 >
-                  <option value="">待指定 / 自动匹配</option>
+                  <option value="">待指定</option>
                   {dataset.teachers.map((t) => (
                     <option key={t.id} value={t.id}>
                       {t.name}
@@ -720,13 +696,13 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-600 mb-1">
+                <label className="block text-xs font-bold text-neutral-600 mb-1.5">
                   上课班级
                 </label>
                 <select
                   value={editingCourse.groupId || ''}
                   onChange={(e) => setEditingCourse({ ...editingCourse, groupId: e.target.value })}
-                  className="w-full bg-[#F4F2F0] border border-[#1A1A1A] px-2.5 py-2 text-xs font-medium focus:outline-none"
+                  className="w-full border border-neutral-300 rounded px-2.5 py-2 text-sm focus:outline-none focus:border-neutral-500 bg-white"
                 >
                   {dataset.groups.map((g) => (
                     <option key={g.id} value={g.id}>
@@ -736,19 +712,19 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({ dataset, onU
                 </select>
               </div>
 
-              <div className="flex justify-end gap-3 pt-3">
+              <div className="flex justify-end gap-3 pt-4 mt-6">
                 <button
                   type="button"
                   onClick={() => setEditingCourse(null)}
-                  className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-200 cursor-pointer"
+                  className="px-4 py-2 rounded text-sm font-medium text-neutral-600 hover:bg-neutral-100 cursor-pointer"
                 >
                   取消
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#1A1A1A] text-white text-xs font-bold uppercase hover:bg-neutral-800 cursor-pointer"
+                  className="px-4 py-2 rounded bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800 cursor-pointer"
                 >
-                  保存修改
+                  保存更新
                 </button>
               </div>
             </form>

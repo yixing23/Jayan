@@ -389,23 +389,21 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#1A1A1A] pb-4">
+      <div className="flex justify-between items-end border-b border-[#1A1A1A] pb-4">
         <div>
-          <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500">
-            Student Class Hours & Deduction System
+          <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500 block mb-0.5">
+            Class Hours & Deduction
           </span>
-          <h2 className="text-3xl font-serif italic font-bold text-[#1A1A1A]">
-            学生课时管理与自动消课
-          </h2>
+          <h2 className="text-3xl font-serif italic font-bold text-[#1A1A1A]">课时管理与自动消课</h2>
+          <p className="text-xs font-mono font-bold text-neutral-500 mt-1">管理学员签约课时账户，记录上课考勤并自动扣减余量。</p>
         </div>
 
         {/* Header Actions */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleExportExpiringCSV}
-            className="px-3.5 py-2 border border-[#1A1A1A] bg-white hover:bg-neutral-100 text-xs font-bold tracking-wider cursor-pointer transition-colors flex items-center gap-1.5 shadow-2xs"
+            className="px-4 py-2 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 text-sm font-medium rounded-md shadow-sm transition-colors flex items-center gap-2"
           >
-            <span className="material-symbols-outlined text-amber-700 text-base">download</span>
             导出待续费名单 (CSV)
           </button>
 
@@ -421,9 +419,8 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
               });
               setShowAccountModal(true);
             }}
-            className="px-4 py-2 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-xs uppercase font-bold tracking-wider cursor-pointer transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors flex items-center gap-2"
           >
-            <span className="material-symbols-outlined text-base">person_add</span>
             设置/报课新课时
           </button>
         </div>
@@ -431,82 +428,79 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="border border-[#1A1A1A] p-4 bg-[#FDFCFB]">
-          <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
+        <div className="border border-neutral-200 rounded-lg p-4 bg-white shadow-sm">
+          <span className="text-sm font-medium text-neutral-500">
             累计签约总课时
           </span>
-          <p className="text-3xl font-serif italic font-bold text-[#1A1A1A] mt-1">
-            {totalEnrolledHours} <span className="text-sm font-sans font-normal text-neutral-600">节</span>
+          <p className="text-2xl font-bold text-neutral-800 mt-2">
+            {totalEnrolledHours} <span className="text-sm font-normal text-neutral-500">节</span>
           </p>
-          <p className="text-[10px] text-neutral-500 mt-1">覆盖 {accounts.length} 个学员账户</p>
+          <p className="text-xs text-neutral-400 mt-1">覆盖 {accounts.length} 个学员账户</p>
         </div>
 
-        <div className="border border-[#1A1A1A] p-4 bg-[#FDFCFB]">
-          <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
+        <div className="border border-neutral-200 rounded-lg p-4 bg-white shadow-sm">
+          <span className="text-sm font-medium text-neutral-500">
             累计已消耗课时
           </span>
-          <p className="text-3xl font-serif italic font-bold text-emerald-800 mt-1">
-            {totalConsumedHours} <span className="text-sm font-sans font-normal text-neutral-600">节</span>
+          <p className="text-2xl font-bold text-emerald-600 mt-2">
+            {totalConsumedHours} <span className="text-sm font-normal text-neutral-500">节</span>
           </p>
-          <p className="text-[10px] text-neutral-500 mt-1">完成率 {Math.round((totalConsumedHours / (totalEnrolledHours || 1)) * 100)}%</p>
+          <p className="text-xs text-neutral-400 mt-1">完成率 {Math.round((totalConsumedHours / (totalEnrolledHours || 1)) * 100)}%</p>
         </div>
 
-        <div className="border border-[#1A1A1A] p-4 bg-[#FDFCFB]">
-          <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
+        <div className="border border-neutral-200 rounded-lg p-4 bg-white shadow-sm">
+          <span className="text-sm font-medium text-neutral-500">
             全校剩余总课时
           </span>
-          <p className="text-3xl font-serif italic font-bold text-blue-900 mt-1">
-            {totalRemainingHours} <span className="text-sm font-sans font-normal text-neutral-600">节</span>
+          <p className="text-2xl font-bold text-blue-600 mt-2">
+            {totalRemainingHours} <span className="text-sm font-normal text-neutral-500">节</span>
           </p>
-          <p className="text-[10px] text-neutral-500 mt-1">待履约课程额度</p>
+          <p className="text-xs text-neutral-400 mt-1">待履约课程额度</p>
         </div>
 
-        <div className="border border-[#1A1A1A] p-4 bg-[#FDFCFB]">
-          <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
+        <div className="border border-neutral-200 rounded-lg p-4 bg-white shadow-sm">
+          <span className="text-sm font-medium text-neutral-500">
             课时预警/需续费
           </span>
-          <p className="text-3xl font-serif italic font-bold text-amber-700 mt-1">
-            {expiringCount} <span className="text-sm font-sans font-normal text-neutral-600">人</span>
+          <p className="text-2xl font-bold text-amber-600 mt-2">
+            {expiringCount} <span className="text-sm font-normal text-neutral-500">人</span>
           </p>
-          <p className="text-[10px] text-neutral-500 mt-1">剩余 ≤ 5 节需提醒续费</p>
+          <p className="text-xs text-neutral-400 mt-1">剩余 ≤ 5 节需提醒续费</p>
         </div>
       </div>
 
       {/* Navigation Sub-Tabs */}
-      <div className="flex border-b border-[#1A1A1A] gap-6 text-xs font-bold uppercase tracking-wider">
+      <div className="flex border-b border-neutral-200 gap-6 text-sm font-medium">
         <button
           onClick={() => setActiveSubTab('accounts')}
-          className={`pb-2 transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 ${
+          className={`pb-3 transition-colors cursor-pointer flex items-center gap-2 border-b-2 ${
             activeSubTab === 'accounts'
-              ? 'border-[#1A1A1A] text-[#1A1A1A]'
-              : 'border-transparent text-neutral-400 hover:text-[#1A1A1A]'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-neutral-500 hover:text-neutral-700'
           }`}
         >
-          <span className="material-symbols-outlined text-base">badge</span>
           学员课时账户大盘 ({accounts.length})
         </button>
 
         <button
           onClick={() => setActiveSubTab('checkin')}
-          className={`pb-2 transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 ${
+          className={`pb-3 transition-colors cursor-pointer flex items-center gap-2 border-b-2 ${
             activeSubTab === 'checkin'
-              ? 'border-[#1A1A1A] text-[#1A1A1A]'
-              : 'border-transparent text-neutral-400 hover:text-[#1A1A1A]'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-neutral-500 hover:text-neutral-700'
           }`}
         >
-          <span className="material-symbols-outlined text-base text-emerald-700">task_alt</span>
           一键打卡消课扣减
         </button>
 
         <button
           onClick={() => setActiveSubTab('logs')}
-          className={`pb-2 transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 ${
+          className={`pb-3 transition-colors cursor-pointer flex items-center gap-2 border-b-2 ${
             activeSubTab === 'logs'
-              ? 'border-[#1A1A1A] text-[#1A1A1A]'
-              : 'border-transparent text-neutral-400 hover:text-[#1A1A1A]'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-neutral-500 hover:text-neutral-700'
           }`}
         >
-          <span className="material-symbols-outlined text-base">receipt_long</span>
           消课流水明细记录 ({deductionLogs.length})
         </button>
       </div>
@@ -515,24 +509,24 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
       {activeSubTab === 'accounts' && (
         <div className="space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-[#F4F2F0] p-3 border border-[#1A1A1A]">
-            <div className="flex items-center gap-2 flex-1 max-w-md">
-              <span className="material-symbols-outlined text-neutral-500 text-sm">search</span>
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 bg-neutral-50 p-4 rounded-lg border border-neutral-200">
+            <div className="flex items-center gap-2 flex-1 max-w-md relative">
+              <span className="material-symbols-outlined text-neutral-400 absolute left-3">search</span>
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="搜索学员姓名或课程名称..."
-                className="w-full bg-white border border-[#1A1A1A] px-2.5 py-1 text-xs focus:outline-none"
+                className="w-full bg-white border border-neutral-200 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
               />
             </div>
 
-            <div className="flex items-center gap-2 text-xs">
-              <span className="font-bold text-neutral-600">状态筛选:</span>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="font-medium text-neutral-600">状态筛选:</span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-white border border-[#1A1A1A] px-2 py-1 font-bold text-xs focus:outline-none cursor-pointer"
+                className="bg-white border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors cursor-pointer"
               >
                 <option value="all">全部账户 ({accounts.length})</option>
                 <option value="active">正常充足</option>
@@ -544,25 +538,25 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
           </div>
 
           {/* Accounts Table */}
-          <div className="border border-[#1A1A1A] overflow-x-auto bg-white">
-            <table className="w-full text-left text-xs border-collapse">
+          <div className="border border-neutral-200 rounded-lg overflow-x-auto bg-white shadow-sm">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="bg-[#1A1A1A] text-white font-mono uppercase text-[10px] tracking-wider">
-                  <th className="p-3">学员 / 班级名称</th>
-                  <th className="p-3">报名课程</th>
-                  <th className="p-3">单节课时长</th>
-                  <th className="p-3">总课时</th>
-                  <th className="p-3">已消课时</th>
-                  <th className="p-3">剩余课时</th>
-                  <th className="p-3 w-36">消耗进度</th>
-                  <th className="p-3">账户状态</th>
-                  <th className="p-3 text-right">管理操作</th>
+                <tr className="bg-neutral-50 text-neutral-600 font-medium border-b border-neutral-200">
+                  <th className="p-4">学员 / 班级名称</th>
+                  <th className="p-4">报名课程</th>
+                  <th className="p-4">单节课时长</th>
+                  <th className="p-4">总课时</th>
+                  <th className="p-4">已消课时</th>
+                  <th className="p-4">剩余课时</th>
+                  <th className="p-4 w-40">消耗进度</th>
+                  <th className="p-4">账户状态</th>
+                  <th className="p-4 text-right">操作</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1A1A1A]">
+              <tbody className="divide-y divide-neutral-200">
                 {filteredAccounts.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="p-8 text-center text-neutral-500 font-serif italic">
+                    <td colSpan={9} className="p-8 text-center text-neutral-500">
                       未找到符合条件的课时账户记录。
                     </td>
                   </tr>
@@ -574,123 +568,119 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                     const isWarning = acc.remainingHours <= 5;
 
                     return (
-                      <tr key={acc.id} className="hover:bg-[#F4F2F0] transition-colors">
-                        <td className="p-3 font-bold text-[#1A1A1A]">
-                          <div className="flex items-center gap-1.5">
+                      <tr key={acc.id} className="hover:bg-neutral-50 transition-colors">
+                        <td className="p-4 text-neutral-800">
+                          <div className="flex items-center gap-1.5 font-medium">
                             {isWarning && (
-                              <span className="material-symbols-outlined text-amber-600 text-sm animate-pulse" title="课时不足预警">
+                              <span className="material-symbols-outlined text-amber-500 text-base" title="课时不足预警">
                                 warning
                               </span>
                             )}
                             <span>{acc.studentName}</span>
                           </div>
                           {acc.note && (
-                            <span className="block text-[10px] font-normal text-neutral-500 font-mono mt-0.5">
+                            <span className="block text-xs text-neutral-500 mt-1">
                               {acc.note}
                             </span>
                           )}
                         </td>
-                        <td className="p-3 font-serif font-bold text-neutral-800">{courseName}</td>
-                        <td className="p-3 font-mono">
-                          <span className="px-1.5 py-0.5 bg-neutral-100 border border-neutral-300 font-bold text-[10px]">
-                            {acc.singleLessonDurationMinutes}分钟 ({durationHours}小时/节)
+                        <td className="p-4 text-neutral-700">{courseName}</td>
+                        <td className="p-4">
+                          <span className="inline-flex items-center px-2 py-1 bg-neutral-100 text-neutral-600 text-xs rounded-md">
+                            {acc.singleLessonDurationMinutes}分钟 ({durationHours}小时)
                           </span>
                         </td>
-                        <td className="p-3 font-mono font-bold">{acc.totalHours} 节</td>
-                        <td className="p-3 font-mono text-emerald-800 font-bold">{acc.consumedHours} 节</td>
-                        <td className="p-3 font-mono font-bold">
+                        <td className="p-4 text-neutral-700">{acc.totalHours} 节</td>
+                        <td className="p-4 text-emerald-600 font-medium">{acc.consumedHours} 节</td>
+                        <td className="p-4 font-bold">
                           <span
                             className={
                               acc.remainingHours === 0
-                                ? 'text-red-700 font-extrabold'
+                                ? 'text-red-600'
                                 : isWarning
-                                ? 'text-amber-700 font-extrabold'
-                                : 'text-blue-900'
+                                ? 'text-amber-600'
+                                : 'text-blue-600'
                             }
                           >
                             {acc.remainingHours} 节
                           </span>
                         </td>
-                        <td className="p-3">
-                          <div className="w-full bg-neutral-200 h-2.5 rounded-full overflow-hidden border border-neutral-400">
+                        <td className="p-4">
+                          <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
                             <div
                               className={`h-full transition-all ${
                                 percent >= 100
-                                  ? 'bg-red-600'
+                                  ? 'bg-red-500'
                                   : percent >= 80
-                                  ? 'bg-amber-500'
-                                  : 'bg-emerald-600'
+                                  ? 'bg-amber-400'
+                                  : 'bg-emerald-500'
                               }`}
                               style={{ width: `${percent}%` }}
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-neutral-500 mt-0.5 block text-right">
-                            已消耗 {percent}%
+                          <span className="text-xs text-neutral-500 mt-1.5 block text-right">
+                            已消 {percent}%
                           </span>
                         </td>
-                        <td className="p-3 font-mono text-[10px]">
+                        <td className="p-4 text-xs">
                           {acc.status === 'exhausted' ? (
-                            <span className="px-2 py-0.5 bg-red-100 text-red-900 border border-red-300 font-bold">
+                            <span className="px-2 py-1 bg-red-50 text-red-700 rounded-md">
                               已耗尽 (0节)
                             </span>
                           ) : acc.status === 'expiring_soon' ? (
-                            <span className="px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 font-bold animate-pulse">
-                              预警 (仅剩{acc.remainingHours}节)
+                            <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-md">
+                              预警 (余{acc.remainingHours}节)
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                            <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md">
                               正常 (余{acc.remainingHours}节)
                             </span>
                           )}
                         </td>
-                        <td className="p-3 text-right space-x-1.5 whitespace-nowrap">
-                          {/* One-click notify button */}
+                        <td className="p-4 text-right space-x-2 whitespace-nowrap">
+                          {/* Actions */}
                           {isWarning && (
                             <button
                               onClick={() => setShowRenewalModal(acc)}
-                              className="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-amber-950 font-extrabold text-[10px] cursor-pointer transition-colors shadow-2xs inline-flex items-center gap-0.5"
+                              className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 font-medium text-xs rounded transition-colors inline-flex items-center gap-1"
                               title="生成催费/续费通知文案"
                             >
-                              <span className="material-symbols-outlined text-xs">chat</span>
-                              <span>催费通知</span>
+                              <span className="material-symbols-outlined text-sm">chat</span>
+                              <span>通知</span>
                             </button>
                           )}
 
-                          {/* Quick Deduction */}
                           <button
                             onClick={() => performDeduction(acc.id, 1)}
-                            className="px-2.5 py-1 bg-emerald-800 hover:bg-emerald-900 text-white text-[10px] font-bold cursor-pointer transition-colors"
+                            className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-medium rounded transition-colors"
                             title="每上完一节课，点击扣减1课时"
                           >
-                            -1课时消课
+                            消课
                           </button>
 
-                          {/* Recharge */}
                           <button
                             onClick={() => {
                               setRechargeAccountId(acc.id);
                               setRechargeAddHours(10);
                             }}
-                            className="px-2.5 py-1 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-[10px] font-bold cursor-pointer transition-colors"
+                            className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded transition-colors"
                           >
-                            续费+课时
+                            续费
                           </button>
 
-                          {/* Edit */}
                           <button
                             onClick={() => {
                               setEditingAccount(acc);
                               setShowAccountModal(true);
                             }}
-                            className="px-2 py-1 border border-[#1A1A1A] hover:bg-neutral-200 text-[#1A1A1A] text-[10px] font-bold cursor-pointer"
+                            className="px-2.5 py-1.5 hover:bg-neutral-100 text-neutral-600 text-xs font-medium rounded transition-colors"
                           >
                             编辑
                           </button>
 
-                          {/* Delete */}
                           <button
                             onClick={() => setDeletingAccount(acc)}
-                            className="px-2 py-1 text-red-700 hover:bg-red-50 text-[10px] font-bold cursor-pointer"
+                            className="px-2.5 py-1.5 text-red-600 hover:bg-red-50 text-xs font-medium rounded transition-colors"
                           >
                             删除
                           </button>
@@ -709,25 +699,22 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
       {activeSubTab === 'checkin' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Card Form */}
-          <div className="lg:col-span-2 border-2 border-[#1A1A1A] p-6 bg-[#FDFCFB] space-y-5">
-            <div className="border-b border-[#1A1A1A] pb-3">
-              <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500">
-                Attendance Check-in & Auto-Deduction
-              </span>
-              <h3 className="text-xl font-serif italic font-bold text-[#1A1A1A]">
-                一键考勤打卡，自动扣减剩余课时
+          <div className="lg:col-span-2 border border-neutral-200 rounded-lg p-6 bg-white shadow-sm space-y-6">
+            <div className="border-b border-neutral-100 pb-4">
+              <h3 className="text-xl font-bold text-neutral-800">
+                一键考勤打卡，自动扣减课时
               </h3>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                  1. 选择消课学员账户:
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  选择消课学员账户:
                 </label>
                 <select
                   value={selectedAccountId}
                   onChange={(e) => setSelectedAccountId(e.target.value)}
-                  className="w-full bg-white border border-[#1A1A1A] p-2.5 text-xs font-bold focus:outline-none cursor-pointer"
+                  className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
                 >
                   {accounts.map((acc) => {
                     const cName = courseMap.get(acc.courseId) || '';
@@ -748,50 +735,50 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                 const durationHours = (target.singleLessonDurationMinutes / 60).toFixed(1).replace(/\.0$/, '');
 
                 return (
-                  <div className="p-4 bg-emerald-50 border border-emerald-300 text-emerald-950 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-100 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <span className="text-[10px] text-emerald-800 uppercase block font-bold">关联课程</span>
-                      <span className="font-bold">{cName}</span>
+                      <span className="text-xs text-blue-600 block mb-1">关联课程</span>
+                      <span className="font-medium text-blue-900">{cName}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-emerald-800 uppercase block font-bold">单节时长</span>
-                      <span className="font-bold">{target.singleLessonDurationMinutes}分钟 ({durationHours}小时)</span>
+                      <span className="text-xs text-blue-600 block mb-1">单节时长</span>
+                      <span className="font-medium text-blue-900">{target.singleLessonDurationMinutes}分钟</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-emerald-800 uppercase block font-bold">总包课时</span>
-                      <span className="font-bold">{target.totalHours} 节</span>
+                      <span className="text-xs text-blue-600 block mb-1">总包课时</span>
+                      <span className="font-medium text-blue-900">{target.totalHours} 节</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-emerald-800 uppercase block font-bold">当前剩余</span>
-                      <span className="font-extrabold text-blue-900">{target.remainingHours} 节</span>
+                      <span className="text-xs text-blue-600 block mb-1">当前剩余</span>
+                      <span className="font-bold text-blue-700">{target.remainingHours} 节</span>
                     </div>
                   </div>
                 );
               })()}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                    2. 本次扣减课时节数:
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    本次扣减课时节数:
                   </label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setCheckinHours(1)}
-                      className={`px-3 py-2 border text-xs font-bold cursor-pointer transition-colors ${
-                        checkinHours === 1 ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white border-[#1A1A1A]'
+                      className={`px-4 py-2 border rounded-md text-sm transition-colors ${
+                        checkinHours === 1 ? 'bg-blue-50 border-blue-200 text-blue-700 font-medium' : 'bg-white border-neutral-300 text-neutral-600 hover:bg-neutral-50'
                       }`}
                     >
-                      扣减 1 节 (标准)
+                      扣减 1 节
                     </button>
                     <button
                       type="button"
                       onClick={() => setCheckinHours(2)}
-                      className={`px-3 py-2 border text-xs font-bold cursor-pointer transition-colors ${
-                        checkinHours === 2 ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white border-[#1A1A1A]'
+                      className={`px-4 py-2 border rounded-md text-sm transition-colors ${
+                        checkinHours === 2 ? 'bg-blue-50 border-blue-200 text-blue-700 font-medium' : 'bg-white border-neutral-300 text-neutral-600 hover:bg-neutral-50'
                       }`}
                     >
-                      扣减 2 节 (连排)
+                      连排 2 节
                     </button>
                     <input
                       type="number"
@@ -799,19 +786,19 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                       max={10}
                       value={checkinHours}
                       onChange={(e) => setCheckinHours(Number(e.target.value) || 1)}
-                      className="w-20 bg-white border border-[#1A1A1A] p-2 text-xs font-bold text-center"
+                      className="w-20 bg-white border border-neutral-300 rounded-md p-2 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                    3. 授课教师签名/记录:
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    授课教师记录:
                   </label>
                   <select
                     value={checkinTeacher}
                     onChange={(e) => setCheckinTeacher(e.target.value)}
-                    className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold focus:outline-none cursor-pointer"
+                    className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
                   >
                     {dataset.teachers.map((t) => (
                       <option key={t.id} value={t.name}>
@@ -823,38 +810,38 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                  4. 消课备注与上课内容记录:
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  消课备注与上课内容记录:
                 </label>
                 <input
                   type="text"
                   value={checkinNote}
                   onChange={(e) => setCheckinNote(e.target.value)}
                   placeholder="例如：按计划完成单元重点例题讲解，学员考勤签到无误"
-                  className="w-full bg-white border border-[#1A1A1A] p-2.5 text-xs font-serif focus:outline-none"
+                  className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
-              <div className="pt-2">
+              <div className="pt-4">
                 <button
                   type="button"
                   onClick={() => {
                     performDeduction(selectedAccountId || accounts[0]?.id || '', checkinHours, checkinTeacher, checkinNote);
                   }}
-                  className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm uppercase tracking-widest cursor-pointer transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md transition-colors shadow-sm flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-lg">check_circle</span>
-                  确定打卡上课，自动扣减 {checkinHours} 课时
+                  确定打卡上课，扣减 {checkinHours} 课时
                 </button>
               </div>
             </div>
           </div>
 
           {/* Quick Guidance side panel */}
-          <div className="border border-[#1A1A1A] p-5 bg-[#F4F2F0] space-y-4">
-            <div className="flex items-center gap-2 text-[#1A1A1A]">
-              <span className="material-symbols-outlined text-amber-700">lightbulb</span>
-              <h4 className="font-serif italic font-bold text-base">课时扣减与消课说明</h4>
+          <div className="border border-neutral-200 rounded-lg p-5 bg-neutral-50 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 text-neutral-800">
+              <span className="material-symbols-outlined text-amber-500">lightbulb</span>
+              <h4 className="font-bold text-base">课时扣减说明</h4>
             </div>
 
             <ul className="text-xs space-y-2 text-neutral-700 leading-relaxed font-serif">
@@ -882,24 +869,24 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
       {/* SubTab 3: Deduction History Logs */}
       {activeSubTab === 'logs' && (
         <div className="space-y-4">
-          <div className="border border-[#1A1A1A] overflow-x-auto bg-white">
-            <table className="w-full text-left text-xs border-collapse">
+          <div className="border border-neutral-200 rounded-lg overflow-x-auto bg-white shadow-sm">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="bg-[#1A1A1A] text-white font-mono uppercase text-[10px] tracking-wider">
-                  <th className="p-3">消课时间</th>
-                  <th className="p-3">学员 / 班级</th>
-                  <th className="p-3">对应课程</th>
-                  <th className="p-3">单节时长</th>
-                  <th className="p-3">扣减课时</th>
-                  <th className="p-3">授课教师</th>
-                  <th className="p-3">消课备注说明</th>
-                  <th className="p-3 text-right">操作</th>
+                <tr className="bg-neutral-50 text-neutral-600 font-medium border-b border-neutral-200">
+                  <th className="p-4">消课时间</th>
+                  <th className="p-4">学员 / 班级</th>
+                  <th className="p-4">对应课程</th>
+                  <th className="p-4">单节时长</th>
+                  <th className="p-4">扣减课时</th>
+                  <th className="p-4">授课教师</th>
+                  <th className="p-4">消课备注说明</th>
+                  <th className="p-4 text-right">操作</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1A1A1A]">
+              <tbody className="divide-y divide-neutral-200">
                 {deductionLogs.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-neutral-500 font-serif italic">
+                    <td colSpan={8} className="p-8 text-center text-neutral-500">
                       暂无消课考勤打卡流水记录。
                     </td>
                   </tr>
@@ -907,20 +894,20 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                   deductionLogs.map((log) => {
                     const durationHours = (log.singleLessonDurationMinutes / 60).toFixed(1).replace(/\.0$/, '');
                     return (
-                      <tr key={log.id} className="hover:bg-[#F4F2F0] transition-colors">
-                        <td className="p-3 font-mono text-neutral-600 font-bold">{log.attendedAt}</td>
-                        <td className="p-3 font-bold text-[#1A1A1A]">{log.studentName}</td>
-                        <td className="p-3 font-serif font-bold text-neutral-800">{log.courseName}</td>
-                        <td className="p-3 font-mono text-neutral-600">
+                      <tr key={log.id} className="hover:bg-neutral-50 transition-colors">
+                        <td className="p-4 text-neutral-500">{log.attendedAt}</td>
+                        <td className="p-4 font-medium text-neutral-800">{log.studentName}</td>
+                        <td className="p-4 text-neutral-700">{log.courseName}</td>
+                        <td className="p-4 text-neutral-600">
                           {log.singleLessonDurationMinutes}分钟 ({durationHours}小时)
                         </td>
-                        <td className="p-3 font-mono font-bold text-red-700">-{log.deductedHours} 节</td>
-                        <td className="p-3 font-bold text-neutral-700">{log.teacherName || '授课教师'}</td>
-                        <td className="p-3 font-serif text-neutral-600">{log.note || '—'}</td>
-                        <td className="p-3 text-right">
+                        <td className="p-4 font-medium text-red-600">-{log.deductedHours} 节</td>
+                        <td className="p-4 text-neutral-700">{log.teacherName || '授课教师'}</td>
+                        <td className="p-4 text-neutral-500">{log.note || '—'}</td>
+                        <td className="p-4 text-right">
                           <button
                             onClick={() => setUndoingLog(log)}
-                            className="px-2.5 py-1 bg-amber-100 border border-amber-400 hover:bg-amber-200 text-amber-900 text-[10px] font-bold cursor-pointer transition-colors"
+                            className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-medium rounded transition-colors"
                             title="撤销本次打卡，退还课时"
                           >
                             撤销消课
@@ -942,55 +929,55 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowRenewalModal(null);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-lg w-full p-6 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-[#1A1A1A] pb-3">
+          <div className="bg-white border border-neutral-200 rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-600 text-xl">mark_chat_unread</span>
-                <h3 className="text-xl font-serif italic font-bold text-[#1A1A1A]">
-                  一键生成微信/短信催费通知
+                <span className="material-symbols-outlined text-amber-500 text-xl">mark_chat_unread</span>
+                <h3 className="text-xl font-bold text-neutral-800">
+                  一键生成催费通知
                 </h3>
               </div>
               <button
                 onClick={() => setShowRenewalModal(null)}
-                className="text-neutral-500 hover:text-[#1A1A1A] text-xl font-bold cursor-pointer"
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
               >
-                ✕
+                <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <div className="space-y-3">
-              <div className="p-3 bg-amber-50 border border-amber-300 text-amber-950 text-xs">
-                <span className="font-bold">学员：{showRenewalModal.studentName}</span> | 
-                <span className="ml-2">剩余课时：<b className="text-red-700">{showRenewalModal.remainingHours} 节</b> (需及时续费)</span>
+            <div className="space-y-4">
+              <div className="p-3 bg-amber-50 rounded-lg border border-amber-100 text-amber-800 text-sm">
+                <span className="font-medium">学员：{showRenewalModal.studentName}</span> | 
+                <span className="ml-2">剩余课时：<b className="text-red-600">{showRenewalModal.remainingHours} 节</b> (需及时续费)</span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
                   通知文案预览 (可直接修改或一键复制):
                 </label>
                 <textarea
                   readOnly
                   value={getNotificationText(showRenewalModal)}
                   rows={6}
-                  className="w-full bg-white border border-[#1A1A1A] p-3 text-xs font-serif leading-relaxed focus:outline-none resize-none"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-md p-3 text-sm text-neutral-600 focus:outline-none resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-neutral-200">
+            <div className="flex justify-end gap-3 pt-4 border-t border-neutral-100">
               <button
                 type="button"
                 onClick={() => setShowRenewalModal(null)}
-                className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-100 cursor-pointer"
+                className="px-4 py-2 border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-md transition-colors"
               >
                 关闭
               </button>
               <button
                 type="button"
                 onClick={() => handleCopyNotification(showRenewalModal)}
-                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 shadow-sm"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">
                   {copiedNotification ? 'check' : 'content_copy'}
@@ -1011,27 +998,27 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
               setEditingAccount(null);
             }
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto backdrop-blur-sm"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
-            <div className="flex justify-between items-center border-b border-[#1A1A1A] pb-3">
-              <h3 className="text-xl font-serif italic font-bold text-[#1A1A1A]">
-                {editingAccount?.id ? '编辑学员课时账户' : '设置学员/班级新课时包'}
+          <div className="bg-white border border-neutral-200 rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
+            <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
+              <h3 className="text-xl font-bold text-neutral-800">
+                {editingAccount?.id ? '编辑学员课时账户' : '设置新课时包'}
               </h3>
               <button
                 onClick={() => {
                   setShowAccountModal(false);
                   setEditingAccount(null);
                 }}
-                className="text-neutral-500 hover:text-[#1A1A1A] text-xl font-bold cursor-pointer"
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
               >
-                ✕
+                <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <form onSubmit={handleSaveAccount} className="space-y-4">
+            <form onSubmit={handleSaveAccount} className="space-y-5">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   学员或班级名称:
                 </label>
                 <input
@@ -1040,18 +1027,18 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                   value={editingAccount?.studentName || ''}
                   onChange={(e) => setEditingAccount({ ...editingAccount, studentName: e.target.value })}
                   placeholder="例如：张伟 或 高一(1)班"
-                  className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold focus:outline-none"
+                  className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   选择关联课程:
                 </label>
                 <select
                   value={editingAccount?.courseId || dataset.courses[0]?.id || ''}
                   onChange={(e) => setEditingAccount({ ...editingAccount, courseId: e.target.value })}
-                  className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold focus:outline-none cursor-pointer"
+                  className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
                 >
                   {dataset.courses.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -1061,10 +1048,10 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                    报课总课时 (节数):
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    总课时 (节):
                   </label>
                   <input
                     type="number"
@@ -1074,15 +1061,13 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                     onChange={(e) =>
                       setEditingAccount({ ...editingAccount, totalHours: Number(e.target.value) || 0 })
                     }
-                    placeholder="例如: 40"
-                    className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold text-center"
+                    className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  <span className="text-[9px] font-mono text-neutral-500 mt-0.5 block">例如报了 40 节课</span>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                    单节时长 (分钟数):
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    单节时长 (分钟):
                   </label>
                   <input
                     type="number"
@@ -1095,28 +1080,27 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                         singleLessonDurationMinutes: Number(e.target.value) || 120,
                       })
                     }
-                    placeholder="例如: 120"
-                    className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold text-center"
+                    className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  <div className="flex gap-1 mt-1">
+                  <div className="flex gap-2 mt-2">
                     <button
                       type="button"
                       onClick={() => setEditingAccount({ ...editingAccount, singleLessonDurationMinutes: 120 })}
-                      className="px-1.5 py-0.5 text-[9px] bg-neutral-200 border border-neutral-400 cursor-pointer"
+                      className="px-2 py-1 text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-md transition-colors"
                     >
                       2小时
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditingAccount({ ...editingAccount, singleLessonDurationMinutes: 90 })}
-                      className="px-1.5 py-0.5 text-[9px] bg-neutral-200 border border-neutral-400 cursor-pointer"
+                      className="px-2 py-1 text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-md transition-colors"
                     >
                       1.5小时
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditingAccount({ ...editingAccount, singleLessonDurationMinutes: 45 })}
-                      className="px-1.5 py-0.5 text-[9px] bg-neutral-200 border border-neutral-400 cursor-pointer"
+                      className="px-2 py-1 text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-md transition-colors"
                     >
                       45分钟
                     </button>
@@ -1126,8 +1110,8 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
 
               {editingAccount?.id && (
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                    调整已消课时 (节数):
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    已消课时 (节):
                   </label>
                   <input
                     type="number"
@@ -1136,13 +1120,13 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                     onChange={(e) =>
                       setEditingAccount({ ...editingAccount, consumedHours: Number(e.target.value) || 0 })
                     }
-                    className="w-full bg-white border border-[#1A1A1A] p-2 text-xs font-bold focus:outline-none"
+                    className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   备注说明 (选填):
                 </label>
                 <input
@@ -1150,26 +1134,26 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                   value={editingAccount?.note || ''}
                   onChange={(e) => setEditingAccount({ ...editingAccount, note: e.target.value })}
                   placeholder="例如: 签约合同号、课时折扣或家长要求"
-                  className="w-full bg-white border border-[#1A1A1A] p-2 text-xs focus:outline-none font-serif"
+                  className="w-full bg-white border border-neutral-300 rounded-md p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-neutral-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-100">
                 <button
                   type="button"
                   onClick={() => {
                     setShowAccountModal(false);
                     setEditingAccount(null);
                   }}
-                  className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-100 cursor-pointer"
+                  className="px-4 py-2 border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-md transition-colors"
                 >
                   取消
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-xs font-bold cursor-pointer"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
                 >
-                  保存课时设置
+                  保存
                 </button>
               </div>
             </form>
@@ -1183,25 +1167,25 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
           onClick={(e) => {
             if (e.target === e.currentTarget) setRechargeAccountId(null);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-sm w-full p-6 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-[#1A1A1A] pb-3">
-              <h3 className="text-lg font-serif italic font-bold text-[#1A1A1A]">
-                学员课时续费 / 加课
+          <div className="bg-white border border-neutral-200 rounded-xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
+              <h3 className="text-xl font-bold text-neutral-800">
+                学员课时续费
               </h3>
               <button
                 onClick={() => setRechargeAccountId(null)}
-                className="text-neutral-500 hover:text-[#1A1A1A] text-xl font-bold cursor-pointer"
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
               >
-                ✕
+                <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4 pt-2">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1">
-                  本次续费增加课时 (节数):
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  新增课时 (节):
                 </label>
                 <div className="flex items-center gap-2">
                   {[10, 20, 40].map((num) => (
@@ -1209,8 +1193,8 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                       key={num}
                       type="button"
                       onClick={() => setRechargeAddHours(num)}
-                      className={`px-3 py-1.5 border text-xs font-bold cursor-pointer ${
-                        rechargeAddHours === num ? 'bg-[#1A1A1A] text-white' : 'bg-white'
+                      className={`px-4 py-2 border rounded-md text-sm font-medium transition-colors ${
+                        rechargeAddHours === num ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-50'
                       }`}
                     >
                       +{num} 节
@@ -1221,24 +1205,24 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
                     min={1}
                     value={rechargeAddHours}
                     onChange={(e) => setRechargeAddHours(Number(e.target.value) || 1)}
-                    className="w-20 bg-white border border-[#1A1A1A] p-1.5 text-xs font-bold text-center"
+                    className="w-20 bg-white border border-neutral-300 rounded-md p-2 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-neutral-200">
+            <div className="flex justify-end gap-3 pt-4 border-t border-neutral-100 mt-6">
               <button
                 type="button"
                 onClick={() => setRechargeAccountId(null)}
-                className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-100 cursor-pointer"
+                className="px-4 py-2 border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-md transition-colors"
               >
                 取消
               </button>
               <button
                 type="button"
                 onClick={handleExecuteRecharge}
-                className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
               >
                 确定续费
               </button>
@@ -1253,27 +1237,27 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
           onClick={(e) => {
             if (e.target === e.currentTarget) setDeletingAccount(null);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
         >
-          <div className="bg-[#FDFCFB] border-2 border-red-800 max-w-sm w-full p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-serif italic font-bold text-red-900">
+          <div className="bg-white border border-neutral-200 rounded-xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <h3 className="text-xl font-bold text-neutral-800">
               确认删除课时账户？
             </h3>
-            <p className="text-xs text-neutral-700">
-              确定要删除学员【<b>{deletingAccount.studentName}</b>】的课时账户吗？此操作同时会清理其所有历史消课流水。
+            <p className="text-sm text-neutral-600">
+              确定要删除学员 <span className="font-semibold text-neutral-900">{deletingAccount.studentName}</span> 的课时账户吗？此操作将清理所有相关的历史消课流水。
             </p>
-            <div className="flex justify-end gap-3 pt-3 border-t border-neutral-200">
+            <div className="flex justify-end gap-3 pt-4 mt-4">
               <button
                 type="button"
                 onClick={() => setDeletingAccount(null)}
-                className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-100 cursor-pointer"
+                className="px-4 py-2 border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-md transition-colors"
               >
                 取消
               </button>
               <button
                 type="button"
                 onClick={() => confirmDeleteAccount(deletingAccount)}
-                className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white text-xs font-bold cursor-pointer"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors"
               >
                 确认删除
               </button>
@@ -1288,27 +1272,27 @@ export const ClassHourManagement: React.FC<ClassHourManagementProps> = ({ datase
           onClick={(e) => {
             if (e.target === e.currentTarget) setUndoingLog(null);
           }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
         >
-          <div className="bg-[#FDFCFB] border-2 border-[#1A1A1A] max-w-sm w-full p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-serif italic font-bold text-[#1A1A1A]">
-              确认撤销此笔考勤消课？
+          <div className="bg-white border border-neutral-200 rounded-xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <h3 className="text-xl font-bold text-neutral-800">
+              确认撤销此笔消课？
             </h3>
-            <p className="text-xs text-neutral-700">
-              将撤销【{undoingLog.studentName}】于 {undoingLog.attendedAt} 扣减的 {undoingLog.deductedHours} 课时，并自动返还至学员账户中。
+            <p className="text-sm text-neutral-600">
+              将撤销 <span className="font-semibold text-neutral-900">{undoingLog.studentName}</span> 于 {undoingLog.attendedAt} 扣减的 <span className="font-semibold text-red-600">{undoingLog.deductedHours} 课时</span>，并自动返还至学员账户。
             </p>
-            <div className="flex justify-end gap-3 pt-3 border-t border-neutral-200">
+            <div className="flex justify-end gap-3 pt-4 mt-4">
               <button
                 type="button"
                 onClick={() => setUndoingLog(null)}
-                className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold hover:bg-neutral-100 cursor-pointer"
+                className="px-4 py-2 border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-md transition-colors"
               >
                 取消
               </button>
               <button
                 type="button"
                 onClick={() => confirmUndoDeduction(undoingLog)}
-                className="px-4 py-2 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-xs font-bold cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
               >
                 确认撤销
               </button>

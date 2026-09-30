@@ -1,14 +1,14 @@
 import React from 'react';
 import { ScheduleDataset, SchedulerMetrics } from '../types';
 
-export type NavTab = 'teachers' | 'rooms' | 'groups' | 'courses' | 'scheduling' | 'timetable' | 'conflicts' | 'class-hours' | 'ai-advisor';
+export type MainTab = 'data-prep' | 'scheduling' | 'timetable';
 
 interface HeaderProps {
-  currentTab: NavTab;
-  setCurrentTab: (tab: NavTab) => void;
+  currentTab: MainTab;
+  setCurrentTab: (tab: MainTab) => void;
+  onOpenAiAdvisor: () => void;
+  onOpenDiagnostics: () => void;
   dataset: ScheduleDataset;
-  onRunAutoSchedule: () => void;
-  isScheduling: boolean;
   metrics: SchedulerMetrics;
   conflictCount: number;
   canUndo?: boolean;
@@ -25,8 +25,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   currentTab,
   setCurrentTab,
-  onRunAutoSchedule,
-  isScheduling,
+  onOpenAiAdvisor,
+  onOpenDiagnostics,
   metrics,
   conflictCount,
   canUndo = false,
@@ -40,249 +40,140 @@ export const Header: React.FC<HeaderProps> = ({
   syncStatus = 'synced',
 }) => {
   return (
-    <header className="border-b border-[#1A1A1A] bg-[#FDFCFB] px-6 lg:px-8 py-3.5 flex flex-col lg:flex-row items-center justify-between gap-4 sticky top-0 z-30 shadow-2xs">
-      {/* Brand Title & Subtitle */}
-      <div className="flex items-center justify-between w-full lg:w-auto shrink-0">
+    <header className="border-b-[2px] border-[#1A1A1A] bg-[#FDFCFB] px-6 lg:px-8 py-3 flex flex-col lg:flex-row items-center justify-between gap-4 sticky top-0 z-30 shadow-sm">
+      {/* Brand & Main Nav */}
+      <div className="flex items-center gap-8 w-full lg:w-auto shrink-0">
         <div>
-          <h1 className="text-lg md:text-xl font-serif font-bold tracking-tight text-[#1A1A1A]">
-            新知 THE WISSEN 排课系统
+          <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-500 block mb-0.5">
+            Core Scheduling System
+          </span>
+          <h1 className="text-xl font-serif italic font-bold text-[#1A1A1A] tracking-tight">
+            新知 THE WISSEN
           </h1>
-          <p className="text-[10px] uppercase tracking-widest font-mono text-neutral-500 mt-0.5">
-            智能教务排课与课表生成引擎
-          </p>
         </div>
+
+        {/* Main Navigation Tabs */}
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider">
+          <button
+            onClick={() => setCurrentTab('data-prep')}
+            className={`py-1.5 transition-all flex items-center gap-1.5 border-b-2 ${
+              currentTab === 'data-prep'
+                ? 'text-[#1A1A1A] border-[#1A1A1A]'
+                : 'text-neutral-500 hover:text-[#1A1A1A] border-transparent'
+            }`}
+          >
+            <span className="material-symbols-outlined text-base">database</span>
+            1. 数据准备
+          </button>
+          <button
+            onClick={() => setCurrentTab('scheduling')}
+            className={`py-1.5 transition-all flex items-center gap-1.5 border-b-2 ${
+              currentTab === 'scheduling'
+                ? 'text-[#1A1A1A] border-[#1A1A1A]'
+                : 'text-neutral-500 hover:text-[#1A1A1A] border-transparent'
+            }`}
+          >
+            <span className="material-symbols-outlined text-base">psychology</span>
+            2. 智能排课
+          </button>
+          <button
+            onClick={() => setCurrentTab('timetable')}
+            className={`py-1.5 transition-all flex items-center gap-1.5 border-b-2 ${
+              currentTab === 'timetable'
+                ? 'text-[#1A1A1A] border-[#1A1A1A]'
+                : 'text-neutral-500 hover:text-[#1A1A1A] border-transparent'
+            }`}
+          >
+            <span className="material-symbols-outlined text-base">calendar_view_week</span>
+            3. 课表大盘
+          </button>
+        </nav>
       </div>
 
-      {/* Main Navigation Tabs */}
-      <nav className="hidden lg:flex items-center gap-4 text-xs font-medium">
-        <button
-          onClick={() => setCurrentTab('teachers')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'teachers'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          教师
-        </button>
-        <button
-          onClick={() => setCurrentTab('rooms')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'rooms'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          教室
-        </button>
-        <button
-          onClick={() => setCurrentTab('groups')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'groups'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          班级
-        </button>
-        <button
-          onClick={() => setCurrentTab('courses')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'courses'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          课程
-        </button>
-        <button
-          onClick={() => setCurrentTab('scheduling')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'scheduling'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          排课
-        </button>
-        <button
-          onClick={() => setCurrentTab('timetable')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'timetable'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          课表/对比
-        </button>
-        <button
-          onClick={() => setCurrentTab('conflicts')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1.5 ${
-            currentTab === 'conflicts'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          <span>诊断</span>
-          {conflictCount > 0 ? (
-            <span className="px-1.5 py-0.2 bg-red-600 text-white text-[9px] font-mono rounded-full font-bold">
-              {conflictCount}
-            </span>
-          ) : (
-            <span className="text-[10px] text-neutral-400">(0)</span>
-          )}
-        </button>
-        <button
-          onClick={() => setCurrentTab('class-hours')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'class-hours'
-              ? 'border-[#1A1A1A] text-[#1A1A1A] font-bold'
-              : 'border-transparent text-neutral-500 hover:text-[#1A1A1A]'
-          }`}
-        >
-          课时管理
-        </button>
-        <button
-          onClick={() => setCurrentTab('ai-advisor')}
-          className={`py-1 px-1 transition-all cursor-pointer border-b-2 flex items-center gap-1 ${
-            currentTab === 'ai-advisor'
-              ? 'border-amber-600 text-amber-900 font-bold'
-              : 'border-transparent text-amber-700 hover:text-amber-900 font-medium'
-          }`}
-        >
-          <span className="material-symbols-outlined text-sm text-amber-600">auto_awesome</span>
-          <span>AI顾问</span>
-        </button>
-      </nav>
-
-      {/* Right Controls: Completion Rate, Undo/Redo & Cloud Sync */}
-      <div className="flex items-center gap-2.5 w-full lg:w-auto justify-end shrink-0 flex-wrap">
-        {/* Undo / Redo Buttons */}
+      {/* Right Tools Area */}
+      <div className="flex items-center gap-3 w-full lg:w-auto justify-end shrink-0 flex-wrap text-xs">
+        
+        {/* Undo / Redo */}
         {onUndo && onRedo && (
-          <div className="flex items-center gap-1 border border-[#1A1A1A] bg-white p-0.5 shadow-2xs">
+          <div className="flex items-center gap-1 bg-neutral-100 rounded-none border border-[#1A1A1A] px-1 py-0.5 shadow-2xs">
             <button
               onClick={onUndo}
               disabled={!canUndo}
-              className={`px-2.5 py-1 text-xs font-bold transition-all flex items-center gap-1.5 border border-transparent ${
-                canUndo
-                  ? 'hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] cursor-pointer active:scale-95'
-                  : 'text-neutral-300 cursor-not-allowed opacity-40'
+              className={`p-1 transition-colors ${
+                canUndo ? 'text-[#1A1A1A] hover:bg-neutral-200 cursor-pointer' : 'text-neutral-300 cursor-not-allowed'
               }`}
-              title={canUndo ? '撤销上一步 (Ctrl+Z / Cmd+Z)' : '无更早历史可撤销'}
+              title="撤销"
             >
-              <span className="material-symbols-outlined text-sm">undo</span>
-              <span className="hidden sm:inline">撤销</span>
+              <span className="material-symbols-outlined text-sm block">undo</span>
             </button>
-
-            <div className="w-[1px] h-4 bg-neutral-300"></div>
-
+            <div className="w-[1px] h-3 bg-[#1A1A1A]"></div>
             <button
               onClick={onRedo}
               disabled={!canRedo}
-              className={`px-2.5 py-1 text-xs font-bold transition-all flex items-center gap-1.5 border border-transparent ${
-                canRedo
-                  ? 'hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] cursor-pointer active:scale-95'
-                  : 'text-neutral-300 cursor-not-allowed opacity-40'
+              className={`p-1 transition-colors ${
+                canRedo ? 'text-[#1A1A1A] hover:bg-neutral-200 cursor-pointer' : 'text-neutral-300 cursor-not-allowed'
               }`}
-              title={canRedo ? '重做 (Ctrl+Y / Cmd+Shift+Z)' : '无重做历史'}
+              title="重做"
             >
-              <span className="material-symbols-outlined text-sm">redo</span>
-              <span className="hidden sm:inline">重做</span>
+              <span className="material-symbols-outlined text-sm block">redo</span>
             </button>
           </div>
         )}
 
-        {/* Completion Rate Card */}
-        <div className="px-3 py-1.5 border border-[#1A1A1A] bg-white flex items-center gap-2.5 text-xs shadow-2xs">
-          <span className="text-[10px] uppercase font-mono text-neutral-500 tracking-wider">排课完成度</span>
-          <span className="font-mono font-bold text-[#1A1A1A] text-sm">{metrics.completionRate}%</span>
-        </div>
-
-        {/* Sync Status Badge */}
-        <div
-          onClick={onOpenCloudSync}
-          className="px-2.5 py-1 border border-[#1A1A1A] bg-white flex items-center gap-1.5 text-xs font-mono cursor-pointer hover:bg-neutral-50 transition-colors"
-          title="点击打开云端同步管理"
-        >
-          {syncStatus === 'syncing' ? (
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-          ) : syncStatus === 'synced' ? (
-            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-          ) : syncStatus === 'unsaved' ? (
-            <span className="w-2 h-2 rounded-full bg-amber-600"></span>
-          ) : (
-            <span className="w-2 h-2 rounded-full bg-red-500"></span>
-          )}
-          <span className="text-[10px] font-bold text-[#1A1A1A]">
-            {syncStatus === 'syncing'
-              ? '同步中...'
-              : syncStatus === 'synced'
-              ? '云端已同步'
-              : syncStatus === 'unsaved'
-              ? '未同步修改'
-              : '同步失败'}
-          </span>
-        </div>
-
-        {/* Auto Sync Switch Toggle */}
-        {onToggleAutoSync && (
+        {/* Diagnostics & AI */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={onToggleAutoSync}
-            className={`px-2.5 py-1.5 text-[11px] font-bold border transition-all flex items-center gap-1 cursor-pointer ${
-              autoSyncEnabled
-                ? 'bg-emerald-50 text-emerald-950 border-emerald-700 hover:bg-emerald-100'
-                : 'bg-neutral-100 text-neutral-600 border-neutral-400 hover:bg-neutral-200'
-            }`}
-            title="开启/关闭静默自动云端增量同步"
+            onClick={onOpenDiagnostics}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#1A1A1A] text-[#1A1A1A] font-bold hover:bg-neutral-100 transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-xs">
-              {autoSyncEnabled ? 'sync' : 'sync_disabled'}
-            </span>
-            <span>{autoSyncEnabled ? '自动同步: 开' : '自动同步: 关'}</span>
+            <span className="material-symbols-outlined text-[16px]">health_and_safety</span>
+            <span>冲突诊断</span>
+            {conflictCount > 0 && (
+              <span className="bg-red-700 text-white px-1.5 py-0.5 text-[10px] font-bold ml-1">{conflictCount}</span>
+            )}
           </button>
-        )}
 
-        {/* Cloud Sync Button */}
+          <button
+            onClick={onOpenAiAdvisor}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-800 text-amber-900 font-bold hover:bg-amber-100 transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
+            <span>AI 顾问</span>
+          </button>
+        </div>
+
+        {/* Cloud Sync Tool */}
         {onOpenCloudSync && (
           <button
             onClick={onOpenCloudSync}
-            className="px-3 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border bg-[#1A1A1A] hover:bg-neutral-800 text-white border-[#1A1A1A] shadow-2xs active:scale-[0.98]"
-            title="跨设备云端数据库同步与提取码"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1A1A1A] text-white font-bold hover:bg-neutral-800 transition-colors shadow-2xs"
+            title="云端同步"
           >
-            <span className="material-symbols-outlined text-sm text-amber-400">cloud_sync</span>
-            <span>{syncCode ? `提取码 [${syncCode}]` : '云端同步'}</span>
+            <span className="material-symbols-outlined text-[16px]">cloud_sync</span>
+            <span>云同步</span>
+            {syncStatus === 'syncing' ? (
+              <span className="w-1.5 h-1.5 rounded-none bg-amber-500 animate-ping ml-1"></span>
+            ) : syncStatus === 'unsaved' ? (
+              <span className="w-1.5 h-1.5 rounded-none bg-amber-500 ml-1"></span>
+            ) : syncStatus === 'synced' ? (
+              <span className="w-1.5 h-1.5 rounded-none bg-emerald-500 ml-1"></span>
+            ) : (
+              <span className="w-1.5 h-1.5 rounded-none bg-red-500 ml-1"></span>
+            )}
           </button>
         )}
       </div>
 
       {/* Mobile Tab Navigation */}
-      <div className="flex lg:hidden w-full border-t border-[#1A1A1A] pt-2 justify-between text-[10px] uppercase font-bold tracking-wider overflow-x-auto pb-1 gap-2">
-        <button onClick={() => setCurrentTab('teachers')} className={currentTab === 'teachers' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          教师
+      <div className="flex lg:hidden w-full border-t border-[#1A1A1A] pt-2 justify-center text-xs font-bold uppercase gap-6">
+        <button onClick={() => setCurrentTab('data-prep')} className={currentTab === 'data-prep' ? 'text-[#1A1A1A] font-bold' : 'text-neutral-500'}>
+          1. 数据准备
         </button>
-        <button onClick={() => setCurrentTab('rooms')} className={currentTab === 'rooms' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          教室
+        <button onClick={() => setCurrentTab('scheduling')} className={currentTab === 'scheduling' ? 'text-[#1A1A1A] font-bold' : 'text-neutral-500'}>
+          2. 排课
         </button>
-        <button onClick={() => setCurrentTab('groups')} className={currentTab === 'groups' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          班级
-        </button>
-        <button onClick={() => setCurrentTab('courses')} className={currentTab === 'courses' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          课程
-        </button>
-        <button onClick={() => setCurrentTab('scheduling')} className={currentTab === 'scheduling' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          排课
-        </button>
-        <button onClick={() => setCurrentTab('timetable')} className={currentTab === 'timetable' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          课表
-        </button>
-        <button onClick={() => setCurrentTab('conflicts')} className={currentTab === 'conflicts' ? 'underline font-extrabold whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          诊断({conflictCount})
-        </button>
-        <button onClick={() => setCurrentTab('class-hours')} className={currentTab === 'class-hours' ? 'underline font-extrabold text-emerald-800 whitespace-nowrap' : 'opacity-60 whitespace-nowrap'}>
-          消课
-        </button>
-        <button onClick={() => setCurrentTab('ai-advisor')} className={currentTab === 'ai-advisor' ? 'underline font-extrabold text-amber-800 whitespace-nowrap' : 'text-amber-700 font-bold whitespace-nowrap'}>
-          ✨ AI
+        <button onClick={() => setCurrentTab('timetable')} className={currentTab === 'timetable' ? 'text-[#1A1A1A] font-bold' : 'text-neutral-500'}>
+          3. 课表
         </button>
       </div>
     </header>
